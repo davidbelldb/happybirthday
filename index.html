@@ -55,7 +55,7 @@
     <div class="card">
         <div id="headline" class="big-text">For the girl who has everything...</div>
         
-        <button id="playBtn">Tap here 🎁</button>
+        <button id="playBtn">Except this</button>
         
         <div id="status" class="sub-text"></div>
 
@@ -76,6 +76,8 @@
         btn.addEventListener('click', function() {
             audio.play().then(() => {
                 // Change Button Text
+
+                status.innerText = "But you deserve it";
                 btn.innerText = "I know, it's awful...";
                 btn.style.background = "#ff0436"; // Darken button so text above/below pops
                 
@@ -83,7 +85,6 @@
                 bdayName.style.display = "block";
                 
                 // Show the magic line
-                status.innerText = "But you deserve it";
             }).catch((error) => {
                 status.innerText = "Tap again!";
             });
