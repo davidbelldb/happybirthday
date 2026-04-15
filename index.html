@@ -87,36 +87,34 @@
             filter: blur(0px) !important;
         }
 
-        /* --- THE DUCK POND (Updated) --- */
+        /* --- THE DUCK POND --- */
         .duck-walker {
             position: absolute;
-            bottom: 0px; /* Positioned at the very bottom */
+            bottom: 0px; 
             width: 100%;
             overflow: hidden;
             pointer-events: none;
             display: flex;
-            align-items: flex-end; /* Ducks sit on the bottom */
-            padding-bottom: 5px;
+            padding-bottom: 10px;
         }
 
-        /* Define the scrolling line */
         .duck-line {
             display: flex;
-            animation: duckLoop 20s linear infinite; /* Adjust timing here (seconds) */
+            white-space: nowrap;
+            /* 12s makes them move a bit faster to account for the size */
+            animation: duckLoop 12s linear infinite; 
         }
 
-        /* Style the individual ducks */
         .duck-image {
-            height: 35px; /* Adjust height of the ducks */
+            height: 70px; /* 200% bigger (was 35px) */
             width: auto;
-            margin: 0 10px; /* Space between ducks */
-            opacity: 0.8;
+            margin: 0 15px; /* Slightly more breathing room for bigger ducks */
+            opacity: 0.9;
         }
 
-        /* The scrolling loop animation */
         @keyframes duckLoop {
-            0% { transform: translateX(100%); } /* Start off-screen right */
-            100% { transform: translateX(-100%); } /* End off-screen left */
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } /* Loops two identical sets for seamless scroll */
         }
 
     </style>
@@ -137,26 +135,26 @@
 
     <div class="duck-walker">
         <div class="duck-line">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
-            <img src="duck.png" alt="Duck" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image">
         </div>
     </div>
 
@@ -189,7 +187,7 @@
                 });
 
             }).catch((error) => {
-                console.log("Audio play failed:", error);
+                console.log("Audio failed:", error);
                 status.innerText = "Tap again to play!";
                 status.style.opacity = "1";
             });
