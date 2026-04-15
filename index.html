@@ -27,7 +27,7 @@
             cursor: pointer; 
             border-radius: 50px; 
             border: none; 
-            background: linear-gradient(45deg, #ff4757, #ff6b81); 
+            background: linear-gradient(45deg, #ff4747, #9546ff); 
             color: white; 
             font-weight: bold; 
             box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
@@ -41,8 +41,8 @@
 <body>
 
     <div class="card">
-        <h1>🎂 Tap to open your gift!</h1>
-        <button id="playBtn">OPEN 🎁</button>
+        <h1>For the girl who has everything - Happy Birthday, Katie!</h1>
+        <button id="playBtn">Tap here</button>
         <div id="status" class="status"></div>
     </div>
 
@@ -60,9 +60,9 @@
             
             // Re-attempting to play for iOS stability
             audio.play().then(() => {
-                btn.innerText = "🎵 Playing!";
-                btn.style.background = "#2ed573";
-                status.innerText = "Pure talent.";
+                btn.innerText = "I know, it's awful";
+                btn.style.background = "#ff4747";
+                status.innerText = "But you deserve it";
             }).catch((error) => {
                 console.log("Error:", error);
                 status.innerText = "Tap again!";
