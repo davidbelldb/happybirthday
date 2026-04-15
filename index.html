@@ -31,7 +31,8 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .slide-down { transform: translateY(120px); }
+        /* Reduced slide distance to close the gap with the top text */
+        .slide-down { transform: translateY(60px); }
 
         .headline { 
             font-size: 2.2rem; 
@@ -39,12 +40,13 @@
             color: white;
             line-height: 1.2;
             margin: 0;
-            transition: opacity 0.5s ease; /* Added for the disappear effect */
+            transition: opacity 0.5s ease;
         }
 
+        /* Nudged down slightly from the very top to sit closer to the button */
         #bdayContainer {
             position: absolute;
-            top: 15%;
+            top: 18%; 
             width: 100%;
             font-size: 4.4rem; 
             font-weight: 900;
@@ -119,20 +121,14 @@
 
         btn.addEventListener('click', function() {
             audio.play().then(() => {
-                // 1. Make the intro text disappear
                 introText.style.opacity = "0";
-                
-                // 2. Slide the remaining elements down
                 card.classList.add('slide-down');
 
-                // 3. Update button
                 btn.innerText = "I know, it's awful";
                 btn.style.background = "rgba(255, 255, 255, 0.15)";
                 
-                // 4. Fade in the magic line
                 status.style.opacity = "0.9";
 
-                // 5. Fade in the giant birthday words
                 words.forEach((word, index) => {
                     setTimeout(() => {
                         word.classList.add('fade-in');
