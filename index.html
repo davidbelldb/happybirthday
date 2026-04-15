@@ -6,7 +6,7 @@
     <title>Happy Birthday Katie!</title>
     <style>
         body { 
-            background: #4b0082; /* Deep Purple */
+            background: #4b0082; 
             color: white; 
             display: flex; 
             flex-direction: column; 
@@ -14,52 +14,80 @@
             align-items: center; 
             height: 100vh; 
             margin: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             text-align: center;
+            overflow: hidden;
         }
-        .card { width: 90%; }
-        
-        /* The Large White Bold Style */
-        .big-text { 
+
+        /* Container that slides everything up to make room */
+        .card {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Slide effect class */
+        .slide-up { transform: translateY(-80px); }
+
+        .headline { 
             font-size: 2.2rem; 
             font-weight: bold; 
-            color: white; 
-            margin: 20px 0;
+            color: white;
             line-height: 1.2;
+            margin: 0;
         }
 
         button { 
             padding: 22px 60px; 
             font-size: 1.6rem; 
             cursor: pointer; 
-            border-radius: 50px; 
+            border-radius: 12px; 
             border: none; 
-            background: #ff0436; /* Red Button */
+            background: #fa233b; 
             color: white; 
             font-weight: bold; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
             -webkit-tap-highlight-color: transparent;
+            min-width: 280px;
+            z-index: 2;
         }
 
-        .sub-text { 
-            margin-top: 25px; 
+        .status { 
             font-size: 1.2rem; 
             font-style: italic; 
-            color: white;
-            opacity: 0.9;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
+
+        /* Fade-in animation for individual words */
+        .word {
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            margin: 0 5px;
+        }
+
+        .fade-in { opacity: 1 !important; }
+
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div id="headline" class="big-text">For the girl who has everything...</div>
+    <div id="mainCard" class="card">
+        <div class="headline">For the woman who has everything</div>
         
-        <button id="playBtn">Except this</button>
+        <button id="playBtn">tap here</button>
         
-        <div id="status" class="sub-text"></div>
-
-         <div id="birthdayName" class="big-text" style="display:none;">Happy Birthday, Katie!</div>
+        <div id="status" class="status">pure magic!</div>
+        
+        <div id="bdayContainer" class="headline">
+            <span class="word">Happy</span>
+            <span class="word">Birthday,</span>
+            <span class="word">Katie!</span>
+        </div>
     </div>
 
     <audio id="myAudio" preload="auto">
@@ -70,23 +98,30 @@
         const audio = document.getElementById('myAudio');
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
-        const headline = document.getElementById('headline');
-        const bdayName = document.getElementById('birthdayName');
+        const card = document.getElementById('mainCard');
+        const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function() {
             audio.play().then(() => {
-                // Change Button Text
+                // 1. Slide the whole card up
+                card.classList.add('slide-up');
 
-                status.innerText = "But you deserve it";
-                btn.innerText = "I know, it's awful...";
-                btn.style.background = "#ff0436"; // Darken button so text above/below pops
+                // 2. Change button text and color
+                btn.innerText = "I know, it's awful";
+                btn.style.background = "rgba(255, 255, 255, 0.1)";
                 
-                // Show "Happy Birthday, Katie!" in the same big style
-                bdayName.style.display = "block";
-                
-                // Show the magic line
+                // 3. Fade in the "pure magic!" text
+                status.style.opacity = "0.9";
+
+                // 4. Fade in "Happy Birthday, Katie!" word by word
+                words.forEach((word, index) => {
+                    setTimeout(() => {
+                        word.classList.add('fade-in');
+                    }, 800 + (index * 600)); // Delay starts after slide, then 600ms per word
+                });
+
             }).catch((error) => {
-                status.innerText = "Tap again!";
+                console.log("Error:", error);
             });
         }, { once: true });
     </script>
