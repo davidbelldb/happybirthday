@@ -71,7 +71,7 @@
         .status { 
             font-size: 1.2rem; 
             font-style: italic; 
-            opacity: 0;
+            opacity: 0; /* Hidden until clicked */
             transition: opacity 1s ease;
             margin-top: 10px;
         }
@@ -88,7 +88,6 @@
             opacity: 1 !important; 
             filter: blur(0px) !important;
         }
-
     </style>
 </head>
 <body>
@@ -119,15 +118,20 @@
 
         btn.addEventListener('click', function() {
             audio.play().then(() => {
+                // Fade out the first line
                 introText.style.opacity = "0";
+                
+                // Move button down to meet the falling giant text
                 card.classList.add('slide-down');
 
-                // Update Button Text and Color to Red
-                btn.innerText = "I know, it's awful.";
+                // Swap green to red and update text
+                btn.innerText = "I know, it's awful";
                 btn.style.background = "#fa233b"; 
                 
+                // Fade in the snarky sub-line
                 status.style.opacity = "0.9";
 
+                // Trigger giant text word-by-word
                 words.forEach((word, index) => {
                     setTimeout(() => {
                         word.classList.add('fade-in');
