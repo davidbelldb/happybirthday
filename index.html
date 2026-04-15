@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
+        /* Standardizing Font Family across the entire page */
         * {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; box-sizing: border-box;
         }
 
         body { 
@@ -18,6 +18,7 @@
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
+            margin: 0; 
             text-align: center;
             overflow: hidden;
         }
@@ -29,24 +30,26 @@
             align-items: center;
             gap: 20px;
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 5;
         }
 
-        .slide-down { transform: translateY(60px); }
+        .slide-down { transform: translateY(120px); }
 
         .headline { 
             font-size: 2.2rem; 
             font-weight: bold; 
+            color: white;
             line-height: 1.2;
-            transition: opacity 0.5s ease;
+            margin: 0;
         }
 
+        /* Giant Birthday Text at top */
         #bdayContainer {
             position: absolute;
-            top: 18%; 
+            top: 8%;
             width: 100%;
             font-size: 4.4rem; 
             font-weight: 900;
+            color: white;
             line-height: 1.1;
             z-index: 10;
             pointer-events: none;
@@ -54,11 +57,11 @@
 
         button { 
             padding: 22px 60px; 
-            font-size: 1.8rem; 
+            font-size: 1.6rem; 
             cursor: pointer; 
             border-radius: 14px; 
             border: none; 
-            background: #5ee788; 
+            background: #fa233b; /* Apple Music Red */
             color: white; 
             font-weight: bold; 
             transition: all 0.5s ease;
@@ -68,10 +71,10 @@
 
         .status { 
             font-size: 1.2rem; 
-            opacity: 0; 
+            font-style: italic; /* Keeps the italics as requested */
+            opacity: 0;
             transition: opacity 1s ease;
             margin-top: 10px;
-            padding: 0 10px;
         }
 
         .word {
@@ -87,57 +90,9 @@
             filter: blur(0px) !important;
         }
 
-        .duck-walker {
-            position: absolute;
-            width: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            display: flex;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-        }
-
-        #topPond { top: 0px; padding-top: 10px; }
-        #bottomPond { bottom: 0px; padding-bottom: 10px; }
-
-        .duck-line { display: flex; white-space: nowrap; }
-        .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
-        .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
-
-        .duck-image {
-            height: 70px; 
-            width: auto;
-            margin: 0 15px; 
-            opacity: 0.9;
-        }
-
-        @keyframes duckLoopRightToLeft {
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
-        }
-
-        @keyframes duckLoopLeftToRight {
-            0% { transform: translateX(-50%); } 
-            100% { transform: translateX(0); } 
-        }
     </style>
 </head>
 <body>
-
-    <div id="topPond" class="duck-walker">
-        <div class="duck-line top-anim">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-        </div>
-    </div>
 
     <div id="bdayContainer">
         <span class="word">Happy</span>
@@ -146,61 +101,30 @@
     </div>
 
     <div id="mainCard" class="card">
-        <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't bad, but your day was still missing...</div>
-        <button id="playBtn"> >>> THIS <<< </button>
-        <div id="status" class="status">But look, you deserve it. Along with a box of those tasty biscuits.</div>
-    </div>
-
-    <div id="bottomPond" class="duck-walker">
-        <div class="duck-line bottom-anim">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-        </div>
+        <div class="headline">For the woman who has everything</div>
+        <button id="playBtn">tap here</button>
+        <div id="status" class="status">pure magic!</div>
     </div>
 
     <audio id="myAudio" preload="auto">
         <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
     </audio>
 
-    <audio id="duckAudio" preload="auto">
-        <source src="duck_quack.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
         const audio = document.getElementById('myAudio');
-        const quack = document.getElementById('duckAudio');
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const card = document.getElementById('mainCard');
-        const introText = document.getElementById('introText');
-        const topPond = document.getElementById('topPond');
-        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function() {
-            // Triggering both play promises
-            const p1 = audio.play();
-            const p2 = quack.play();
-
-            Promise.all([p1, p2]).then(() => {
-                introText.style.opacity = "0";
+            audio.play().then(() => {
                 card.classList.add('slide-down');
 
-                btn.innerText = "I know, it's awful...";
-                btn.style.background = "#fa233b"; 
+                btn.innerText = "I know, it's awful";
+                btn.style.background = "rgba(255, 255, 255, 0.15)";
                 
                 status.style.opacity = "0.9";
-                
-                topPond.style.opacity = "1";
-                bottomPond.style.opacity = "1";
 
                 words.forEach((word, index) => {
                     setTimeout(() => {
@@ -209,11 +133,10 @@
                 });
 
             }).catch((error) => {
-                console.log("Audio failed:", error);
-                status.innerText = "Tap again to play!";
-                status.style.opacity = "1";
+                console.log("Audio play failed:", error);
             });
         }, { once: true });
     </script>
+
 </body>
 </html>
