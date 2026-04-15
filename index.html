@@ -20,22 +20,22 @@
             text-align: center;
             padding: 20px;
         }
-        h1 { font-size: 2rem; margin-bottom: 20px; }
+        h1 { font-size: 2.2rem; margin-bottom: 25px; }
         button { 
-            padding: 20px 50px; 
-            font-size: 1.5rem; 
+            padding: 22px 60px; 
+            font-size: 1.6rem; 
             cursor: pointer; 
-            border-radius: 40px; 
+            border-radius: 50px; 
             border: none; 
             background: linear-gradient(45deg, #ff4757, #ff6b81); 
             color: white; 
             font-weight: bold; 
-            box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
-            transition: transform 0.2s;
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.4);
+            transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
         }
-        button:active { transform: scale(0.95); }
-        .status { margin-top: 20px; color: #888; font-size: 0.9rem; }
+        button:active { transform: scale(0.92); opacity: 0.9; }
+        .status { margin-top: 25px; color: #888; font-size: 1rem; font-style: italic; min-height: 1.2em; }
     </style>
 </head>
 <body>
@@ -47,7 +47,7 @@
     </div>
 
     <audio id="myAudio" preload="auto">
-        <source src="https://raw.githubusercontent.com/davidbelldb/happybirthday/main/birthday%20flute.mp3" type="audio/mpeg">
+        <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -55,13 +55,20 @@
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
 
-        btn.addEventListener('click', () => {
-            status.innerText = "Loading flute...";
+        btn.addEventListener('click', function() {
+            status.innerText = "Loading the masterpiece...";
             
+            // Re-attempting to play for iOS stability
             audio.play().then(() => {
-                btn.innerText = "🎵 Playing...";
+                btn.innerText = "🎵 Playing!";
                 btn.style.background = "#2ed573";
-                status.innerText = "";
+                status.innerText = "Pure talent.";
             }).catch((error) => {
-                console.error("Playback failed:", error);
-                status.innerText = "Error
+                console.log("Error:", error);
+                status.innerText = "Tap again!";
+            });
+        }, { once: true });
+    </script>
+
+</body>
+</html>
