@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
+        /* Standardizing Font Family across the entire page */
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
         body { 
             background: #4b0082; 
             color: white; 
@@ -14,7 +19,6 @@
             align-items: center; 
             height: 100vh; 
             margin: 0; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             text-align: center;
             overflow: hidden;
         }
@@ -28,8 +32,7 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Moves the button area down slightly to make room for the giant text above */
-        .slide-down { transform: translateY(100px); }
+        .slide-down { transform: translateY(120px); }
 
         .headline { 
             font-size: 2.2rem; 
@@ -39,10 +42,10 @@
             margin: 0;
         }
 
-        /* 100% bigger (4.4rem) and positioned at the top */
+        /* Giant Birthday Text at top */
         #bdayContainer {
             position: absolute;
-            top: 10%;
+            top: 8%;
             width: 100%;
             font-size: 4.4rem; 
             font-weight: 900;
@@ -56,9 +59,9 @@
             padding: 22px 60px; 
             font-size: 1.6rem; 
             cursor: pointer; 
-            border-radius: 12px; 
+            border-radius: 14px; 
             border: none; 
-            background: #fa233b; 
+            background: #fa233b; /* Apple Music Red */
             color: white; 
             font-weight: bold; 
             transition: all 0.5s ease;
@@ -68,17 +71,18 @@
 
         .status { 
             font-size: 1.2rem; 
-            font-style: italic; 
+            font-style: italic; /* Keeps the italics as requested */
             opacity: 0;
             transition: opacity 1s ease;
+            margin-top: 10px;
         }
 
         .word {
             display: inline-block;
             opacity: 0;
             transition: opacity 0.8s ease;
-            margin: 0 10px;
-            filter: blur(5px); /* Adds a smooth fade-in effect */
+            margin: 0 8px;
+            filter: blur(8px);
         }
 
         .fade-in { 
@@ -97,7 +101,7 @@
     </div>
 
     <div id="mainCard" class="card">
-        <div class="headline">For the woman who has everything...</div>
+        <div class="headline">For the woman who has everything</div>
         <button id="playBtn">tap here</button>
         <div id="status" class="status">pure magic!</div>
     </div>
@@ -115,25 +119,21 @@
 
         btn.addEventListener('click', function() {
             audio.play().then(() => {
-                // 1. Slide the button and intro text DOWN
                 card.classList.add('slide-down');
 
-                // 2. Change button appearance
                 btn.innerText = "I know, it's awful";
-                btn.style.background = "rgba(255, 255, 255, 0.1)";
+                btn.style.background = "rgba(255, 255, 255, 0.15)";
                 
-                // 3. Fade in the "pure magic!" text
                 status.style.opacity = "0.9";
 
-                // 4. Fade in the GIANT text word by word
                 words.forEach((word, index) => {
                     setTimeout(() => {
                         word.classList.add('fade-in');
-                    }, 500 + (index * 600)); 
+                    }, 600 + (index * 600)); 
                 });
 
             }).catch((error) => {
-                console.log("Error:", error);
+                console.log("Audio play failed:", error);
             });
         }, { once: true });
     </script>
