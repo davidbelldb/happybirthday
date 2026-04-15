@@ -87,39 +87,75 @@
             filter: blur(0px) !important;
         }
 
-        /* --- THE DUCK POND --- */
+        /* --- THE DUCK PONDS --- */
         .duck-walker {
             position: absolute;
-            bottom: 0px; 
             width: 100%;
             overflow: hidden;
             pointer-events: none;
             display: flex;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        /* Top Pond - Left to Right */
+        #topPond {
+            top: 0px;
+            padding-top: 10px;
+        }
+
+        /* Bottom Pond - Right to Left */
+        #bottomPond {
+            bottom: 0px;
             padding-bottom: 10px;
         }
 
         .duck-line {
             display: flex;
             white-space: nowrap;
-            /* 12s makes them move a bit faster to account for the size */
-            animation: duckLoop 12s linear infinite; 
         }
 
+        /* Bottom ducks right-to-left */
+        .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
+        
+        /* Top ducks left-to-right */
+        .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
+
         .duck-image {
-            height: 70px; /* 200% bigger (was 35px) */
+            height: 70px; 
             width: auto;
-            margin: 0 15px; /* Slightly more breathing room for bigger ducks */
+            margin: 0 15px; 
             opacity: 0.9;
         }
 
-        @keyframes duckLoop {
+        @keyframes duckLoopRightToLeft {
             0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } /* Loops two identical sets for seamless scroll */
+            100% { transform: translateX(-50%); } 
+        }
+
+        @keyframes duckLoopLeftToRight {
+            0% { transform: translateX(-50%); } 
+            100% { transform: translateX(0); } 
         }
 
     </style>
 </head>
 <body>
+
+    <div id="topPond" class="duck-walker">
+        <div class="duck-line top-anim">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck_2.png" class="duck-image">
+        </div>
+    </div>
 
     <div id="bdayContainer">
         <span class="word">Happy</span>
@@ -130,31 +166,21 @@
     <div id="mainCard" class="card">
         <div id="introText" class="headline">For the girl who has everything...</div>
         <button id="playBtn">Except for this</button>
-        <div id="status" class="status">But it's only what you deserve!</div>
+        <div id="status" class="status">But it's no less than you deserve!</div>
     </div>
 
-    <div class="duck-walker">
-        <div class="duck-line">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image">
+    <div id="bottomPond" class="duck-walker">
+        <div class="duck-line bottom-anim">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
         </div>
     </div>
 
@@ -168,6 +194,8 @@
         const status = document.getElementById('status');
         const card = document.getElementById('mainCard');
         const introText = document.getElementById('introText');
+        const topPond = document.getElementById('topPond');
+        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function() {
@@ -179,6 +207,10 @@
                 btn.style.background = "#fa233b"; 
                 
                 status.style.opacity = "0.9";
+                
+                // Show both duck ponds!
+                topPond.style.opacity = "1";
+                bottomPond.style.opacity = "1";
 
                 words.forEach((word, index) => {
                     setTimeout(() => {
