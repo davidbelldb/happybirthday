@@ -19,7 +19,6 @@
             overflow: hidden;
         }
 
-        /* Container that slides everything up to make room */
         .card {
             width: 90%;
             display: flex;
@@ -29,8 +28,8 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Slide effect class */
-        .slide-up { transform: translateY(-80px); }
+        /* Moves the button area down slightly to make room for the giant text above */
+        .slide-down { transform: translateY(100px); }
 
         .headline { 
             font-size: 2.2rem; 
@@ -38,6 +37,19 @@
             color: white;
             line-height: 1.2;
             margin: 0;
+        }
+
+        /* 100% bigger (4.4rem) and positioned at the top */
+        #bdayContainer {
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            font-size: 4.4rem; 
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            z-index: 10;
+            pointer-events: none;
         }
 
         button { 
@@ -52,7 +64,6 @@
             transition: all 0.5s ease;
             -webkit-tap-highlight-color: transparent;
             min-width: 280px;
-            z-index: 2;
         }
 
         .status { 
@@ -62,32 +73,33 @@
             transition: opacity 1s ease;
         }
 
-        /* Fade-in animation for individual words */
         .word {
             display: inline-block;
             opacity: 0;
             transition: opacity 0.8s ease;
-            margin: 0 5px;
+            margin: 0 10px;
+            filter: blur(5px); /* Adds a smooth fade-in effect */
         }
 
-        .fade-in { opacity: 1 !important; }
+        .fade-in { 
+            opacity: 1 !important; 
+            filter: blur(0px) !important;
+        }
 
     </style>
 </head>
 <body>
 
+    <div id="bdayContainer">
+        <span class="word">Happy</span>
+        <span class="word">Birthday,</span>
+        <span class="word">Katie!</span>
+    </div>
+
     <div id="mainCard" class="card">
         <div class="headline">For the woman who has everything</div>
-        
         <button id="playBtn">tap here</button>
-        
         <div id="status" class="status">pure magic!</div>
-        
-        <div id="bdayContainer" class="headline">
-            <span class="word">Happy</span>
-            <span class="word">Birthday,</span>
-            <span class="word">Katie!</span>
-        </div>
     </div>
 
     <audio id="myAudio" preload="auto">
@@ -103,21 +115,21 @@
 
         btn.addEventListener('click', function() {
             audio.play().then(() => {
-                // 1. Slide the whole card up
-                card.classList.add('slide-up');
+                // 1. Slide the button and intro text DOWN
+                card.classList.add('slide-down');
 
-                // 2. Change button text and color
+                // 2. Change button appearance
                 btn.innerText = "I know, it's awful";
                 btn.style.background = "rgba(255, 255, 255, 0.1)";
                 
                 // 3. Fade in the "pure magic!" text
                 status.style.opacity = "0.9";
 
-                // 4. Fade in "Happy Birthday, Katie!" word by word
+                // 4. Fade in the GIANT text word by word
                 words.forEach((word, index) => {
                     setTimeout(() => {
                         word.classList.add('fade-in');
-                    }, 800 + (index * 600)); // Delay starts after slide, then 600ms per word
+                    }, 500 + (index * 600)); 
                 });
 
             }).catch((error) => {
