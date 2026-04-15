@@ -34,7 +34,7 @@
             cursor: pointer; 
             border-radius: 50px; 
             border: none; 
-            background: #ff0000; /* Red Button */
+            background: #ff0436; /* Red Button */
             color: white; 
             font-weight: bold; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
@@ -53,9 +53,9 @@
 <body>
 
     <div class="card">
-        <div id="headline" class="big-text">For the woman who has everything</div>
+        <div id="headline" class="big-text">For the woman who has everything...</div>
         
-        <button id="playBtn">click here</button>
+        <button id="playBtn">Tap here 🎁</button>
         
         <div id="birthdayName" class="big-text" style="display:none;">Happy Birthday, Katie!</div>
         
@@ -77,13 +77,13 @@
             audio.play().then(() => {
                 // Change Button Text
                 btn.innerText = "I know, it's awful";
-                btn.style.background = "#222"; // Darken button so text above/below pops
+                btn.style.background = "#ff0436"; // Darken button so text above/below pops
                 
                 // Show "Happy Birthday, Katie!" in the same big style
                 bdayName.style.display = "block";
                 
                 // Show the magic line
-                status.innerText = "Pure magic!";
+                status.innerText = "But you really do deserve it";
             }).catch((error) => {
                 status.innerText = "Tap again!";
             });
