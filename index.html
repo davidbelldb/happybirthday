@@ -32,8 +32,10 @@
             font-weight: bold; 
             box-shadow: 0 10px 20px rgba(255, 71, 87, 0.3);
             transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
         button:active { transform: scale(0.95); }
+        .status { margin-top: 20px; color: #888; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -41,20 +43,25 @@
     <div class="card">
         <h1>🎂 Tap to open your gift!</h1>
         <button id="playBtn">OPEN 🎁</button>
+        <div id="status" class="status"></div>
     </div>
 
-    <audio id="myAudio" src="PENDING"></audio>
+    <audio id="myAudio" preload="auto">
+        <source src="https://raw.githubusercontent.com/davidbelldb/happybirthday/main/birthday%20flute.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         const audio = document.getElementById('myAudio');
         const btn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
 
         btn.addEventListener('click', () => {
-            audio.play();
-            btn.innerText = "🎵 Playing...";
-            btn.style.background = "#2ed573"; // Changes green when playing
-        });
-    </script>
-
-</body>
-</html>
+            status.innerText = "Loading flute...";
+            
+            audio.play().then(() => {
+                btn.innerText = "🎵 Playing...";
+                btn.style.background = "#2ed573";
+                status.innerText = "";
+            }).catch((error) => {
+                console.error("Playback failed:", error);
+                status.innerText = "Error
