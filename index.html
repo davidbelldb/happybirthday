@@ -53,13 +53,13 @@
 <body>
 
     <div class="card">
-        <div id="headline" class="big-text">For the woman who has everything...</div>
+        <div id="headline" class="big-text">For the girl who has everything...</div>
         
         <button id="playBtn">Tap here 🎁</button>
         
-        <div id="birthdayName" class="big-text" style="display:none;">Happy Birthday, Katie!</div>
-        
         <div id="status" class="sub-text"></div>
+
+         <div id="birthdayName" class="big-text" style="display:none;">Happy Birthday, Katie!</div>
     </div>
 
     <audio id="myAudio" preload="auto">
@@ -76,14 +76,14 @@
         btn.addEventListener('click', function() {
             audio.play().then(() => {
                 // Change Button Text
-                btn.innerText = "I know, it's awful";
+                btn.innerText = "I know, it's awful...";
                 btn.style.background = "#ff0436"; // Darken button so text above/below pops
                 
                 // Show "Happy Birthday, Katie!" in the same big style
                 bdayName.style.display = "block";
                 
                 // Show the magic line
-                status.innerText = "But you really do deserve it";
+                status.innerText = "But you deserve it";
             }).catch((error) => {
                 status.innerText = "Tap again!";
             });
