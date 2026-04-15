@@ -68,10 +68,10 @@
 
         .status { 
             font-size: 1.2rem; 
-     
             opacity: 0; 
             transition: opacity 1s ease;
             margin-top: 10px;
+            padding: 0 10px;
         }
 
         .word {
@@ -87,7 +87,6 @@
             filter: blur(0px) !important;
         }
 
-        /* --- THE DUCK PONDS --- */
         .duck-walker {
             position: absolute;
             width: 100%;
@@ -98,27 +97,11 @@
             transition: opacity 1.5s ease;
         }
 
-        /* Top Pond - Left to Right */
-        #topPond {
-            top: 0px;
-            padding-top: 10px;
-        }
+        #topPond { top: 0px; padding-top: 10px; }
+        #bottomPond { bottom: 0px; padding-bottom: 10px; }
 
-        /* Bottom Pond - Right to Left */
-        #bottomPond {
-            bottom: 0px;
-            padding-bottom: 10px;
-        }
-
-        .duck-line {
-            display: flex;
-            white-space: nowrap;
-        }
-
-        /* Bottom ducks right-to-left */
+        .duck-line { display: flex; white-space: nowrap; }
         .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
-        
-        /* Top ducks left-to-right */
         .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
 
         .duck-image {
@@ -137,7 +120,6 @@
             0% { transform: translateX(-50%); } 
             100% { transform: translateX(0); } 
         }
-
     </style>
 </head>
 <body>
@@ -178,7 +160,7 @@
             <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duc.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck.png" class="duck-image">
         </div>
@@ -188,8 +170,13 @@
         <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
     </audio>
 
+    <audio id="duckAudio" preload="auto">
+        <source src="duck_quack.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const audio = document.getElementById('myAudio');
+        const quack = document.getElementById('duckAudio');
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const card = document.getElementById('mainCard');
@@ -199,7 +186,11 @@
         const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function() {
-            audio.play().then(() => {
+            // Triggering both play promises
+            const p1 = audio.play();
+            const p2 = quack.play();
+
+            Promise.all([p1, p2]).then(() => {
                 introText.style.opacity = "0";
                 card.classList.add('slide-down');
 
@@ -208,7 +199,6 @@
                 
                 status.style.opacity = "0.9";
                 
-                // Show both duck ponds!
                 topPond.style.opacity = "1";
                 bottomPond.style.opacity = "1";
 
@@ -225,6 +215,5 @@
             });
         }, { once: true });
     </script>
-
 </body>
 </html>
