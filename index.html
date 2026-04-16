@@ -23,6 +23,20 @@
             cursor: pointer;
         }
 
+        /* 3D Container */
+        #canvas-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 60vh;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease;
+            pointer-events: none;
+        }
+
         .card {
             width: 90%;
             display: flex;
@@ -112,7 +126,6 @@
             opacity: 0.9;
         }
 
-        /* The floating "TAP" labels */
         .tap-hint {
             position: absolute;
             font-weight: 900;
@@ -143,11 +156,10 @@
 </head>
 <body>
 
+    <div id="canvas-container"></div>
+
     <div id="topPond" class="duck-walker">
         <div class="duck-line top-anim">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
@@ -179,29 +191,75 @@
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
         </div>
     </div>
 
-    <audio id="myAudio" preload="auto">
-        <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="myAudio" preload="auto"><source src="shitty_birthday_flute.mp3" type="audio/mpeg"></audio>
+    <audio id="duckAudio" preload="auto"><source src="duck_quack.mp3" type="audio/mpeg"></audio>
+    <audio id="encoreAudio" preload="auto"><source src="quacky_bday.mp3" type="audio/mpeg"></audio>
+    <audio id="bgQuackAudio" preload="auto"><source src="quack_me.mp3" type="audio/mpeg"></audio>
 
-    <audio id="duckAudio" preload="auto">
-        <source src="duck_quack.mp3" type="audio/mpeg">
-    </audio>
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 
-    <audio id="encoreAudio" preload="auto">
-        <source src="quacky_bday.mp3" type="audio/mpeg">
-    </audio>
+        // Variables
+        const container = document.getElementById('canvas-container');
+        const btn = document.getElementById('playBtn');
+        let bar;
 
-    <audio id="bgQuackAudio" preload="auto">
-        <source src="quack_me.mp3" type="audio/mpeg">
-    </audio>
+        // Init 3D Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Textures
+        const loader = new THREE.TextureLoader();
+        const purpleMat = new THREE.MeshStandardMaterial({ color: 0x4b0082 });
+        
+        const materials = [
+            purpleMat, purpleMat, purpleMat, purpleMat,
+            new THREE.MeshStandardMaterial({ map: loader.load('front.png') }),
+            new THREE.MeshStandardMaterial({ map: loader.load('back.png') })
+        ];
+
+        const geometry = new THREE.BoxGeometry(5, 2, 0.4);
+        bar = new THREE.Mesh(geometry, materials);
+        scene.add(bar);
+
+        const light = new THREE.DirectionalLight(0xffffff, 1.2);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+        camera.position.z = 6;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if(bar) {
+                bar.rotation.y += 0.015;
+                bar.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
+            }
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Sync with your existing button logic
+        btn.addEventListener('click', () => {
+            container.style.opacity = "1";
+        });
+    </script>
 
     <script>
+        // YOUR EXISTING BUTTON & AUDIO LOGIC
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
@@ -213,11 +271,10 @@
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        // Background click handler
         document.body.addEventListener('click', function(e) {
             if (e.target !== btn) {
                 bgQuack.currentTime = 0; 
-                bgQuack.play().catch(err => console.log("User must interact first"));
+                bgQuack.play().catch(err => {});
             }
         });
 
@@ -233,53 +290,34 @@
             }
         }
 
-        // Main button handler
         btn.addEventListener('click', function firstClick(e) {
             e.stopPropagation(); 
+            audio.play();
+            quack.play();
+
+            introText.style.opacity = "0";
+            btn.innerText = "I know, it's awful.";
+            btn.style.background = "#fa233b"; 
             
-            const p1 = audio.play();
-            const p2 = quack.play();
+            status.style.opacity = "0.9";
+            topPond.style.opacity = "1";
+            bottomPond.style.opacity = "1";
 
-            Promise.all([p1, p2]).then(() => {
-                introText.style.opacity = "0";
-                btn.innerText = "I know, it's awful.";
-                btn.style.background = "#fa233b"; 
-                
-                status.style.opacity = "0.9";
-                topPond.style.opacity = "1";
-                bottomPond.style.opacity = "1";
+            words.forEach((word, index) => {
+                setTimeout(() => {
+                    word.classList.add('fade-in');
+                }, 600 + (index * 600)); 
+            });
 
-                words.forEach((word, index) => {
-                    setTimeout(() => {
-                        word.classList.add('fade-in');
-                    }, 600 + (index * 600)); 
-                });
-
-                btn.removeEventListener('click', firstClick);
-                
-                // Second phase button listener
-                btn.addEventListener('click', function secondClick(e) {
-                    e.stopPropagation();
-                    encore.currentTime = 0;
-                    encore.play();
-                    btn.innerText = "Quite terrible, tbf";
-                    
-                    // Create floating instructions
-                    createHints();
-
-                    btn.removeEventListener('click', secondClick);
-
-                    // Final phase button listener
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        btn.innerText = "What? That's it.";
-                        btn.style.opacity = "0.7";
-                    });
-                });
-
-            }).catch((error) => {
-                status.innerText = "Tap again to play!";
-                status.style.opacity = "1";
+            btn.removeEventListener('click', firstClick);
+            
+            btn.addEventListener('click', function secondClick(e) {
+                e.stopPropagation();
+                encore.currentTime = 0;
+                encore.play();
+                btn.innerText = "Quite terrible, tbf";
+                createHints();
+                btn.removeEventListener('click', secondClick);
             });
         });
     </script>
