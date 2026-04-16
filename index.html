@@ -5,92 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
-        * {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; box-sizing: border-box;
-        }
-
-        body { 
-            background: #2e004f; 
-            color: white; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            text-align: center;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        #canvas-container {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-            pointer-events: none;
-        }
-
-        .card {
-            width: 90%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            z-index: 5;
-        }
-
-        .headline { 
-            font-size: 1.8rem; 
-            font-weight: bold; 
-            transition: opacity 0.5s ease;
-            max-width: 600px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        #bdayContainer {
-            position: absolute;
-            top: 10%; width: 100%;
-            font-size: 3.5rem; font-weight: 900;
-            z-index: 10; pointer-events: none;
-        }
-
-        button { 
-            padding: 16px 40px; font-size: 1.5rem; 
-            cursor: pointer; border-radius: 50px; border: none; 
-            background: #5ee788; color: #2e004f; font-weight: 900; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            z-index: 30; 
-        }
-
+        body { margin: 0; background: #2e004f; color: white; overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
+        .card { z-index: 5; text-align: center; }
+        button { padding: 16px 40px; font-size: 1.5rem; cursor: pointer; border-radius: 50px; border: none; background: #5ee788; color: #2e004f; font-weight: 900; box-shadow: 0 10px 20px rgba(0,0,0,0.3); position: relative; z-index: 30; }
+        #bdayContainer { position: absolute; top: 10%; width: 100%; font-size: 3.5rem; font-weight: 900; text-align: center; z-index: 10; pointer-events: none; }
         .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 5px; filter: blur(8px); }
         .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
-
-        .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
-        #topPond { top: 0px; padding-top: 10px; }
-        #bottomPond { bottom: 0px; padding-bottom: 10px; }
-        .duck-line { display: flex; white-space: nowrap; }
-        .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
-        .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
-        .duck-image { height: 60px; width: auto; margin: 0 15px; opacity: 0.8; }
-
-        @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
     </style>
 </head>
 <body>
 
     <div id="canvas-container"></div>
-
-    <div id="topPond" class="duck-walker">
-        <div class="duck-line top-anim">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-        </div>
-    </div>
 
     <div id="bdayContainer">
         <span class="word">Happy</span>
@@ -99,21 +25,11 @@
     </div>
 
     <div id="mainCard" class="card">
-        <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't too bad, but your bday was still missing...</div>
         <button id="playBtn"> This. </button>
-    </div>
-
-    <div id="bottomPond" class="duck-walker">
-        <div class="duck-line bottom-anim">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-        </div>
     </div>
 
     <audio id="myAudio" preload="auto"><source src="shitty_birthday_flute.mp3" type="audio/mpeg"></audio>
     <audio id="duckAudio" preload="auto"><source src="duck_quack.mp3" type="audio/mpeg"></audio>
-    <audio id="encoreAudio" preload="auto"><source src="quacky_bday.mp3" type="audio/mpeg"></audio>
     <audio id="bgQuackAudio" preload="auto"><source src="quack_me.mp3" type="audio/mpeg"></audio>
 
     <script type="module">
@@ -121,7 +37,7 @@
 
         const container = document.getElementById('canvas-container');
         const btn = document.getElementById('playBtn');
-        const bars = []; // Array to hold all bar instances
+        const bars = [];
 
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -130,98 +46,85 @@
         container.appendChild(renderer.domElement);
 
         const loader = new THREE.TextureLoader();
-        const wrapperMaterial = (texName) => new THREE.MeshStandardMaterial({ 
-            map: loader.load(texName),
-            roughness: 0.15,
-            metalness: 0.2
-        });
-
-        const purpleSide = new THREE.MeshStandardMaterial({ color: 0x3d0066 });
-        const materials = [purpleSide, purpleSide, purpleSide, purpleSide, wrapperMaterial('front.png'), wrapperMaterial('back.png')];
         
-        // Small, thick geometry
-        const geometry = new THREE.BoxGeometry(2.5, 0.9, 0.35);
+        // Fix 1: Properly load the texture and set it to repeat/wrap
+        const texture = loader.load('front.png');
+        
+        // Fix 2: Create a material for the "ends" using a cropped version of your image 
+        // We'll use a color that matches the orange crimp for the sides
+        const orangeEnd = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.3, metalness: 0.4 });
+        const purpleTop = new THREE.MeshStandardMaterial({ color: 0x4b0082, roughness: 0.3, metalness: 0.2 });
 
-        // Create 8 instances at varying angles and positions
-        for (let i = 0; i < 8; i++) {
+        const frontMat = new THREE.MeshStandardMaterial({ map: loader.load('front.png'), roughness: 0.2, metalness: 0.3 });
+        const backMat = new THREE.MeshStandardMaterial({ map: loader.load('back.png'), roughness: 0.2, metalness: 0.3 });
+
+        // Fix 3: Material Array (Right, Left, Top, Bottom, Front, Back)
+        // This puts orange on the thin side "ends" so it looks like a wrapper!
+        const materials = [
+            orangeEnd, // Right (the crimped bit)
+            orangeEnd, // Left (the crimped bit)
+            purpleTop, // Top
+            purpleTop, // Bottom
+            frontMat,  // Front
+            backMat    // Back
+        ];
+
+        // Fix 4: Slender Geometry
+        const geometry = new THREE.BoxGeometry(4, 1.2, 0.3);
+
+        for (let i = 0; i < 10; i++) {
             const bar = new THREE.Mesh(geometry, materials);
+            bar.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 4);
+            bar.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
             
-            // Random positions around the center
-            bar.position.x = (Math.random() - 0.5) * 10;
-            bar.position.y = (Math.random() - 0.5) * 6;
-            bar.position.z = (Math.random() - 0.5) * 2;
-
-            // Random initial angles (45 deg = 0.78 rad, 60 deg = 1.04 rad)
-            bar.rotation.x = Math.random() * Math.PI;
-            bar.rotation.y = Math.random() * Math.PI;
-            bar.rotation.z = Math.random() * Math.PI;
-
-            // Give each bar a unique spin speed
             bar.userData = { 
-                speedX: (Math.random() - 0.5) * 0.02, 
-                speedY: (Math.random() - 0.5) * 0.03 
+                speedX: (Math.random() - 0.5) * 0.01, 
+                speedY: 0.02 + Math.random() * 0.02 
             };
-
+            
             scene.add(bar);
             bars.push(bar);
         }
 
-        const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
-        light1.position.set(5, 5, 5);
-        scene.add(light1);
-        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        // Fix 5: Dramatic lighting to show the wrapper edges
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+        scene.add(hemiLight);
+        
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 5, 5);
+        scene.add(dirLight);
 
         camera.position.z = 10;
 
         function animate() {
             requestAnimationFrame(animate);
             bars.forEach(bar => {
-                bar.rotation.x += bar.userData.speedX;
                 bar.rotation.y += bar.userData.speedY;
+                bar.rotation.x += bar.userData.speedX;
             });
             renderer.render(scene, camera);
         }
         animate();
 
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
         btn.addEventListener('click', () => { container.style.opacity = "1"; });
     </script>
 
     <script>
-        // Main Logic (Ducks, Audio, Button)
+        // Audio/UI Logic
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
-        const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
-        const introText = document.getElementById('introText');
-        const topPond = document.getElementById('topPond');
-        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function firstClick() {
             audio.play();
             quack.play();
-            introText.style.opacity = "0";
-            btn.innerText = "I know, it's terrible.";
-            topPond.style.opacity = "1";
-            bottomPond.style.opacity = "1";
-
+            btn.innerText = "It's a chocolate storm!";
             words.forEach((word, index) => {
                 setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
             });
-
             btn.removeEventListener('click', firstClick);
-            btn.addEventListener('click', () => {
-                encore.currentTime = 0;
-                encore.play();
-                btn.innerText = "Stop clicking it.";
-            });
         });
 
         document.body.addEventListener('click', (e) => {
