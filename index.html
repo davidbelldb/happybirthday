@@ -11,7 +11,7 @@
         }
 
         body { 
-            background: #4b0082; 
+            background: #2e004f; 
             color: white; 
             display: flex; 
             flex-direction: column; 
@@ -23,17 +23,13 @@
             cursor: pointer;
         }
 
-        /* 3D Container */
         #canvas-container {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 60vh;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 1;
             opacity: 0;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
             pointer-events: none;
         }
 
@@ -43,115 +39,45 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 5;
         }
 
         .headline { 
-            font-size: 2.2rem; 
+            font-size: 1.8rem; 
             font-weight: bold; 
-            line-height: 1.2;
             transition: opacity 0.5s ease;
+            max-width: 600px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         #bdayContainer {
             position: absolute;
-            top: 18%; 
-            width: 100%;
-            font-size: 4.0rem; 
-            font-weight: 900;
-            line-height: 1.1;
-            z-index: 10;
-            pointer-events: none;
+            top: 10%; width: 100%;
+            font-size: 3.5rem; font-weight: 900;
+            z-index: 10; pointer-events: none;
         }
 
         button { 
-            padding: 18px 54px; 
-            font-size: 1.8rem; 
-            cursor: pointer; 
-            border-radius: 14px; 
-            border: none; 
-            background: #5ee788; 
-            color: white; 
-            font-weight: bold; 
-            transition: all 0.5s ease;
-            -webkit-tap-highlight-color: transparent;
-            min-width: 280px;
-            position: relative;
+            padding: 16px 40px; font-size: 1.5rem; 
+            cursor: pointer; border-radius: 50px; border: none; 
+            background: #5ee788; color: #2e004f; font-weight: 900; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             z-index: 30; 
         }
 
-        .status { 
-            font-size: 0.8rem; 
-            opacity: 0; 
-            transition: opacity 1s ease;
-            margin-top: 10px;
-            padding: 0 10px;
-        }
+        .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 5px; filter: blur(8px); }
+        .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
 
-        .word {
-            display: inline-block;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-            margin: 0 8px;
-            filter: blur(8px);
-        }
-
-        .fade-in { 
-            opacity: 1 !important; 
-            filter: blur(0px) !important;
-        }
-
-        .duck-walker {
-            position: absolute;
-            width: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            display: flex;
-            opacity: 0;
-            transition: opacity 1.5s ease;
-        }
-
+        .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
         #topPond { top: 0px; padding-top: 10px; }
         #bottomPond { bottom: 0px; padding-bottom: 10px; }
-
         .duck-line { display: flex; white-space: nowrap; }
         .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
         .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
+        .duck-image { height: 60px; width: auto; margin: 0 15px; opacity: 0.8; }
 
-        .duck-image {
-            height: 70px; 
-            width: auto;
-            margin: 0 15px; 
-            opacity: 0.9;
-        }
-
-        .tap-hint {
-            position: absolute;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.6);
-            pointer-events: none;
-            z-index: 25;
-            animation: pulse 1.5s ease-in-out infinite;
-            text-transform: uppercase;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 0.3; }
-        }
-
-        @keyframes duckLoopRightToLeft {
-            0% { transform: translateX(0); } 
-            100% { transform: translateX(-50%); } 
-        }
-
-        @keyframes duckLoopLeftToRight {
-            0% { transform: translateX(-50%); } 
-            100% { transform: translateX(0); } 
-        }
+        @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
     </style>
 </head>
 <body>
@@ -160,10 +86,6 @@
 
     <div id="topPond" class="duck-walker">
         <div class="duck-line top-anim">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
-            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
@@ -179,15 +101,10 @@
     <div id="mainCard" class="card">
         <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't too bad, but your bday was still missing...</div>
         <button id="playBtn"> This. </button>
-        <div id="status" class="status">*Better late than never, right? But look. You deserve it. Along with a box of biscuits and a bag of coffee.</div>
     </div>
 
     <div id="bottomPond" class="duck-walker">
         <div class="duck-line bottom-anim">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
-            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
@@ -202,123 +119,113 @@
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 
-        // Variables
         const container = document.getElementById('canvas-container');
         const btn = document.getElementById('playBtn');
-        let bar;
+        const bars = []; // Array to hold all bar instances
 
-        // Init 3D Scene
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
-        // Textures
         const loader = new THREE.TextureLoader();
-        const purpleMat = new THREE.MeshStandardMaterial({ color: 0x4b0082 });
+        const wrapperMaterial = (texName) => new THREE.MeshStandardMaterial({ 
+            map: loader.load(texName),
+            roughness: 0.15,
+            metalness: 0.2
+        });
+
+        const purpleSide = new THREE.MeshStandardMaterial({ color: 0x3d0066 });
+        const materials = [purpleSide, purpleSide, purpleSide, purpleSide, wrapperMaterial('front.png'), wrapperMaterial('back.png')];
         
-        const materials = [
-            purpleMat, purpleMat, purpleMat, purpleMat,
-            new THREE.MeshStandardMaterial({ map: loader.load('front.png') }),
-            new THREE.MeshStandardMaterial({ map: loader.load('back.png') })
-        ];
+        // Small, thick geometry
+        const geometry = new THREE.BoxGeometry(2.5, 0.9, 0.35);
 
-        const geometry = new THREE.BoxGeometry(5, 2, 0.4);
-        bar = new THREE.Mesh(geometry, materials);
-        scene.add(bar);
+        // Create 8 instances at varying angles and positions
+        for (let i = 0; i < 8; i++) {
+            const bar = new THREE.Mesh(geometry, materials);
+            
+            // Random positions around the center
+            bar.position.x = (Math.random() - 0.5) * 10;
+            bar.position.y = (Math.random() - 0.5) * 6;
+            bar.position.z = (Math.random() - 0.5) * 2;
 
-        const light = new THREE.DirectionalLight(0xffffff, 1.2);
-        light.position.set(5, 5, 5);
-        scene.add(light);
+            // Random initial angles (45 deg = 0.78 rad, 60 deg = 1.04 rad)
+            bar.rotation.x = Math.random() * Math.PI;
+            bar.rotation.y = Math.random() * Math.PI;
+            bar.rotation.z = Math.random() * Math.PI;
+
+            // Give each bar a unique spin speed
+            bar.userData = { 
+                speedX: (Math.random() - 0.5) * 0.02, 
+                speedY: (Math.random() - 0.5) * 0.03 
+            };
+
+            scene.add(bar);
+            bars.push(bar);
+        }
+
+        const light1 = new THREE.DirectionalLight(0xffffff, 1.2);
+        light1.position.set(5, 5, 5);
+        scene.add(light1);
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-        camera.position.z = 6;
+        camera.position.z = 10;
 
         function animate() {
             requestAnimationFrame(animate);
-            if(bar) {
-                bar.rotation.y += 0.015;
-                bar.rotation.x = Math.sin(Date.now() * 0.001) * 0.1;
-            }
+            bars.forEach(bar => {
+                bar.rotation.x += bar.userData.speedX;
+                bar.rotation.y += bar.userData.speedY;
+            });
             renderer.render(scene, camera);
         }
         animate();
 
-        // Handle Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // Sync with your existing button logic
-        btn.addEventListener('click', () => {
-            container.style.opacity = "1";
-        });
+        btn.addEventListener('click', () => { container.style.opacity = "1"; });
     </script>
 
     <script>
-        // YOUR EXISTING BUTTON & AUDIO LOGIC
+        // Main Logic (Ducks, Audio, Button)
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
-        const status = document.getElementById('status');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        document.body.addEventListener('click', function(e) {
-            if (e.target !== btn) {
-                bgQuack.currentTime = 0; 
-                bgQuack.play().catch(err => {});
-            }
-        });
-
-        function createHints() {
-            for(let i=0; i<8; i++) {
-                const hint = document.createElement('div');
-                hint.className = 'tap-hint';
-                hint.innerText = 'TAP';
-                hint.style.left = Math.random() * 80 + 10 + '%';
-                hint.style.top = Math.random() * 80 + 10 + '%';
-                hint.style.animationDelay = Math.random() * 2 + 's';
-                document.body.appendChild(hint);
-            }
-        }
-
-        btn.addEventListener('click', function firstClick(e) {
-            e.stopPropagation(); 
+        btn.addEventListener('click', function firstClick() {
             audio.play();
             quack.play();
-
             introText.style.opacity = "0";
-            btn.innerText = "I know, it's awful.";
-            btn.style.background = "#fa233b"; 
-            
-            status.style.opacity = "0.9";
+            btn.innerText = "I know, it's terrible.";
             topPond.style.opacity = "1";
             bottomPond.style.opacity = "1";
 
             words.forEach((word, index) => {
-                setTimeout(() => {
-                    word.classList.add('fade-in');
-                }, 600 + (index * 600)); 
+                setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
             });
 
             btn.removeEventListener('click', firstClick);
-            
-            btn.addEventListener('click', function secondClick(e) {
-                e.stopPropagation();
+            btn.addEventListener('click', () => {
                 encore.currentTime = 0;
                 encore.play();
-                btn.innerText = "Quite terrible, tbf";
-                createHints();
-                btn.removeEventListener('click', secondClick);
+                btn.innerText = "Stop clicking it.";
             });
+        });
+
+        document.body.addEventListener('click', (e) => {
+            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(()=>{}); }
         });
     </script>
 </body>
