@@ -78,7 +78,7 @@
         }
 
         /* Shared style for final sequence buttons */
-        #finalBtn, #stopBtn {
+        #finalBtn, #stopBtn, #lastBtn {
             display: none;
             background: #ffa500; /* Orange */
             color: #4b0082;      /* Purple */
@@ -187,6 +187,7 @@
         <button id="playBtn"> This. </button>
         <button id="finalBtn">Until next year!</button>
         <button id="stopBtn">Seriously.</button>
+        <button id="lastBtn">Stop clicking!</button>
         <div id="status" class="status">*Better late than never, right? But look. You deserve it. Along with a box of biscuits and a bag of coffee.</div>
     </div>
 
@@ -277,6 +278,7 @@
         const btn = document.getElementById('playBtn');
         const finalBtn = document.getElementById('finalBtn');
         const stopBtn = document.getElementById('stopBtn');
+        const lastBtn = document.getElementById('lastBtn');
         const status = document.getElementById('status');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
@@ -347,11 +349,17 @@
             });
         });
 
-        // Last logic: From 'Until next year' to 'Seriously. Stop.'
+        // Sequence: Until next year -> Seriously. -> Stop clicking!
         finalBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             finalBtn.style.display = "none";
             stopBtn.style.display = "block";
+        });
+
+        stopBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            stopBtn.style.display = "none";
+            lastBtn.style.display = "block";
         });
     </script>
 </body>
