@@ -23,13 +23,14 @@
             cursor: pointer;
         }
 
-        /* 3D Scene Layer */
         #canvas-container {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: 2;
             pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
 
         .card {
@@ -195,21 +196,10 @@
         </div>
     </div>
 
-    <audio id="myAudio" preload="auto">
-        <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="duckAudio" preload="auto">
-        <source src="duck_quack.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="encoreAudio" preload="auto">
-        <source src="quacky_bday.mp3" type="audio/mpeg">
-    </audio>
-
-    <audio id="bgQuackAudio" preload="auto">
-        <source src="quack_me.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="myAudio" preload="auto"><source src="shitty_birthday_flute.mp3" type="audio/mpeg"></audio>
+    <audio id="duckAudio" preload="auto"><source src="duck_quack.mp3" type="audio/mpeg"></audio>
+    <audio id="encoreAudio" preload="auto"><source src="quacky_bday.mp3" type="audio/mpeg"></audio>
+    <audio id="bgQuackAudio" preload="auto"><source src="quack_me.mp3" type="audio/mpeg"></audio>
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
@@ -230,29 +220,34 @@
         const bars = [];
         const loader = new GLTFLoader();
 
-        loader.load('bar.glb', (gltf) => {
-            for (let i = 0; i < 7; i++) {
-                const bar = gltf.scene.clone();
-                // Finger-nail size scale
-                bar.scale.set(0.2, 0.2, 0.2); 
-                
-                bar.position.set(
-                    (Math.random() - 0.5) * 15,
-                    (Math.random() - 0.5) * 10,
-                    (Math.random() - 0.5) * 5
-                );
+        // Export this function to the global window so the other script can call it
+        window.spawnBars = function() {
+            document.getElementById('canvas-container').style.opacity = "1";
+            loader.load('bar.glb', (gltf) => {
+                // Total of 27 bars (7 original + 20 more)
+                for (let i = 0; i < 27; i++) {
+                    const bar = gltf.scene.clone();
+                    // Scaled up by 200% (original 0.2 is now 0.6 for "nail" size context)
+                    bar.scale.set(0.6, 0.6, 0.6); 
+                    
+                    bar.position.set(
+                        (Math.random() - 0.5) * 15,
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 5
+                    );
 
-                bar.userData = {
-                    rotX: Math.random() * 0.02 + 0.01,
-                    rotY: Math.random() * 0.02 + 0.01,
-                    speedX: (Math.random() - 0.5) * 0.01,
-                    speedY: (Math.random() - 0.5) * 0.01
-                };
+                    bar.userData = {
+                        rotX: Math.random() * 0.04 + 0.02,
+                        rotY: Math.random() * 0.04 + 0.02,
+                        speedX: (Math.random() - 0.5) * 0.02,
+                        speedY: (Math.random() - 0.5) * 0.02
+                    };
 
-                scene.add(bar);
-                bars.push(bar);
-            }
-        });
+                    scene.add(bar);
+                    bars.push(bar);
+                }
+            });
+        };
 
         function animate() {
             requestAnimationFrame(animate);
@@ -262,9 +257,8 @@
                 bar.position.x += bar.userData.speedX;
                 bar.position.y += bar.userData.speedY;
 
-                // Simple wrap-around to keep them on screen
-                if (Math.abs(bar.position.x) > 10) bar.userData.speedX *= -1;
-                if (Math.abs(bar.position.y) > 7) bar.userData.speedY *= -1;
+                if (Math.abs(bar.position.x) > 12) bar.userData.speedX *= -1;
+                if (Math.abs(bar.position.y) > 8) bar.userData.speedY *= -1;
             });
             renderer.render(scene, camera);
         }
@@ -289,11 +283,10 @@
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        // Background click handler
         document.body.addEventListener('click', function(e) {
             if (e.target !== btn) {
                 bgQuack.currentTime = 0; 
-                bgQuack.play().catch(err => console.log("User must interact first"));
+                bgQuack.play().catch(err => {});
             }
         });
 
@@ -309,53 +302,41 @@
             }
         }
 
-        // Main button handler
         btn.addEventListener('click', function firstClick(e) {
             e.stopPropagation(); 
-            
-            const p1 = audio.play();
-            const p2 = quack.play();
+            audio.play();
+            quack.play();
 
-            Promise.all([p1, p2]).then(() => {
+            Promise.all([audio.play(), quack.play()]).then(() => {
                 introText.style.opacity = "0";
                 btn.innerText = "I know, it's awful.";
                 btn.style.background = "#fa233b"; 
-                
                 status.style.opacity = "0.9";
                 topPond.style.opacity = "1";
                 bottomPond.style.opacity = "1";
 
                 words.forEach((word, index) => {
-                    setTimeout(() => {
-                        word.classList.add('fade-in');
-                    }, 600 + (index * 600)); 
+                    setTimeout(() => { word.classList.add('fade-in'); }, 600 + (index * 600)); 
                 });
+
+                // TRIGGER BARS HERE - When the button says "I know, it's awful."
+                if(window.spawnBars) window.spawnBars();
 
                 btn.removeEventListener('click', firstClick);
                 
-                // Second phase button listener
                 btn.addEventListener('click', function secondClick(e) {
                     e.stopPropagation();
                     encore.currentTime = 0;
                     encore.play();
                     btn.innerText = "Quite terrible, tbf";
-                    
-                    // Create floating instructions
                     createHints();
-
                     btn.removeEventListener('click', secondClick);
-
-                    // Final phase button listener
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
                         btn.innerText = "What? That's it.";
                         btn.style.opacity = "0.7";
                     });
                 });
-
-            }).catch((error) => {
-                status.innerText = "Tap again to play!";
-                status.style.opacity = "1";
             });
         });
     </script>
