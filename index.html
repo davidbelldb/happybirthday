@@ -33,8 +33,6 @@
             z-index: 5;
         }
 
-        /* Movement class removed from here */
-
         .headline { 
             font-size: 2.2rem; 
             font-weight: bold; 
@@ -175,9 +173,14 @@
         <source src="duck_quack.mp3" type="audio/mpeg">
     </audio>
 
+    <audio id="encoreAudio" preload="auto">
+        <source src="quacky_bday.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
+        const encore = document.getElementById('encoreAudio');
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
         const card = document.getElementById('mainCard');
@@ -186,21 +189,18 @@
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        btn.addEventListener('click', function() {
+        // First click handler
+        btn.addEventListener('click', function firstClick() {
             const p1 = audio.play();
             const p2 = quack.play();
 
             Promise.all([p1, p2]).then(() => {
                 introText.style.opacity = "0";
                 
-                // Trigger for movement removed from here
-                // card.classList.add('slide-down');
-
                 btn.innerText = "I know, it's awful.";
                 btn.style.background = "#fa233b"; 
                 
                 status.style.opacity = "0.9";
-                
                 topPond.style.opacity = "1";
                 bottomPond.style.opacity = "1";
 
@@ -210,12 +210,20 @@
                     }, 600 + (index * 600)); 
                 });
 
+                // Remove the first listener and add the Encore listener
+                btn.removeEventListener('click', firstClick);
+                
+                btn.addEventListener('click', function() {
+                    encore.play();
+                    btn.innerText = "Make it stop!!";
+                });
+
             }).catch((error) => {
                 console.log("Audio failed:", error);
                 status.innerText = "Tap again to play!";
                 status.style.opacity = "1";
             });
-        }, { once: true });
+        });
     </script>
 </body>
 </html>
