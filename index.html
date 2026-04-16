@@ -5,18 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
-        body { margin: 0; background: #2e004f; color: white; overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; opacity: 0; transition: opacity 1.5s ease; pointer-events: none; }
-        .card { z-index: 5; text-align: center; }
-        button { padding: 16px 40px; font-size: 1.5rem; cursor: pointer; border-radius: 50px; border: none; background: #5ee788; color: #2e004f; font-weight: 900; box-shadow: 0 10px 20px rgba(0,0,0,0.3); position: relative; z-index: 30; }
-        #bdayContainer { position: absolute; top: 10%; width: 100%; font-size: 3.5rem; font-weight: 900; text-align: center; z-index: 10; pointer-events: none; }
-        .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 5px; filter: blur(8px); }
+        /* ALL YOUR ORIGINAL STYLES RESTORED */
+        * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #4b0082; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; overflow: hidden; cursor: pointer; }
+        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; }
+        .headline { font-size: 2.2rem; font-weight: bold; line-height: 1.2; transition: opacity 0.5s ease; }
+        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; line-height: 1.1; z-index: 10; pointer-events: none; }
+        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; min-width: 280px; position: relative; z-index: 30; }
+        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; padding: 0 10px; }
+        .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 8px; filter: blur(8px); }
         .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
+        .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; display: flex; opacity: 0; transition: opacity 1.5s ease; }
+        #topPond { top: 0px; padding-top: 10px; }
+        #bottomPond { bottom: 0px; padding-bottom: 10px; }
+        .duck-line { display: flex; white-space: nowrap; }
+        .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
+        .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
+        .duck-image { height: 70px; width: auto; margin: 0 15px; opacity: 0.9; }
+        @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+
+        /* 3D Container - Invisible until click */
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
     </style>
 </head>
 <body>
 
     <div id="canvas-container"></div>
+
+    <div id="topPond" class="duck-walker">
+        <div class="duck-line top-anim">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+        </div>
+    </div>
 
     <div id="bdayContainer">
         <span class="word">Happy</span>
@@ -25,20 +48,29 @@
     </div>
 
     <div id="mainCard" class="card">
+        <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't too bad, but your bday was still missing...</div>
         <button id="playBtn"> This. </button>
+        <div id="status" class="status">*Better late than never, right? But look. You deserve it. Along with a box of biscuits and a bag of coffee.</div>
+    </div>
+
+    <div id="bottomPond" class="duck-walker">
+        <div class="duck-line bottom-anim">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+        </div>
     </div>
 
     <audio id="myAudio" preload="auto"><source src="shitty_birthday_flute.mp3" type="audio/mpeg"></audio>
     <audio id="duckAudio" preload="auto"><source src="duck_quack.mp3" type="audio/mpeg"></audio>
+    <audio id="encoreAudio" preload="auto"><source src="quacky_bday.mp3" type="audio/mpeg"></audio>
     <audio id="bgQuackAudio" preload="auto"><source src="quack_me.mp3" type="audio/mpeg"></audio>
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
 
         const container = document.getElementById('canvas-container');
-        const btn = document.getElementById('playBtn');
         const bars = [];
-
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -46,89 +78,85 @@
         container.appendChild(renderer.domElement);
 
         const loader = new THREE.TextureLoader();
-        
-        // Fix 1: Properly load the texture and set it to repeat/wrap
-        const texture = loader.load('front.png');
-        
-        // Fix 2: Create a material for the "ends" using a cropped version of your image 
-        // We'll use a color that matches the orange crimp for the sides
-        const orangeEnd = new THREE.MeshStandardMaterial({ color: 0xe67e22, roughness: 0.3, metalness: 0.4 });
-        const purpleTop = new THREE.MeshStandardMaterial({ color: 0x4b0082, roughness: 0.3, metalness: 0.2 });
-
-        const frontMat = new THREE.MeshStandardMaterial({ map: loader.load('front.png'), roughness: 0.2, metalness: 0.3 });
-        const backMat = new THREE.MeshStandardMaterial({ map: loader.load('back.png'), roughness: 0.2, metalness: 0.3 });
-
-        // Fix 3: Material Array (Right, Left, Top, Bottom, Front, Back)
-        // This puts orange on the thin side "ends" so it looks like a wrapper!
+        // Matching the orange from your wrapper for the thin sides
+        const orangeSide = new THREE.MeshStandardMaterial({ color: 0xffa500, metalness: 0.3, roughness: 0.2 });
         const materials = [
-            orangeEnd, // Right (the crimped bit)
-            orangeEnd, // Left (the crimped bit)
-            purpleTop, // Top
-            purpleTop, // Bottom
-            frontMat,  // Front
-            backMat    // Back
+            orangeSide, orangeSide, orangeSide, orangeSide,
+            new THREE.MeshStandardMaterial({ map: loader.load('front.png'), metalness: 0.2, roughness: 0.2 }),
+            new THREE.MeshStandardMaterial({ map: loader.load('back.png'), metalness: 0.2, roughness: 0.2 })
         ];
 
-        // Fix 4: Slender Geometry
-        const geometry = new THREE.BoxGeometry(4, 1.2, 0.3);
+        // Thin chocolate bar geometry
+        const geometry = new THREE.BoxGeometry(2.5, 0.9, 0.15);
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 12; i++) {
             const bar = new THREE.Mesh(geometry, materials);
-            bar.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, (Math.random() - 0.5) * 4);
-            bar.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-            
+            bar.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
+            bar.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
             bar.userData = { 
-                speedX: (Math.random() - 0.5) * 0.01, 
-                speedY: 0.02 + Math.random() * 0.02 
+                rotX: (Math.random() - 0.5) * 0.02, 
+                rotY: (Math.random() - 0.5) * 0.05 
             };
-            
             scene.add(bar);
             bars.push(bar);
         }
 
-        // Fix 5: Dramatic lighting to show the wrapper edges
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
-        scene.add(hemiLight);
-        
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(5, 5, 5);
-        scene.add(dirLight);
-
+        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 5, 5);
+        scene.add(light);
         camera.position.z = 10;
 
         function animate() {
             requestAnimationFrame(animate);
-            bars.forEach(bar => {
-                bar.rotation.y += bar.userData.speedY;
-                bar.rotation.x += bar.userData.speedX;
+            bars.forEach(b => {
+                b.rotation.x += b.userData.rotX;
+                b.rotation.y += b.userData.rotY;
             });
             renderer.render(scene, camera);
         }
         animate();
-
-        btn.addEventListener('click', () => { container.style.opacity = "1"; });
+        
+        // Show bars when original button is clicked
+        document.getElementById('playBtn').addEventListener('click', () => {
+            container.style.opacity = "1";
+        });
     </script>
 
     <script>
-        // Audio/UI Logic
+        /* ALL YOUR ORIGINAL LOGIC RESTORED */
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
+        const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
+        const introText = document.getElementById('introText');
+        const topPond = document.getElementById('topPond');
+        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        btn.addEventListener('click', function firstClick() {
-            audio.play();
-            quack.play();
-            btn.innerText = "It's a chocolate storm!";
-            words.forEach((word, index) => {
-                setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
-            });
-            btn.removeEventListener('click', firstClick);
+        document.body.addEventListener('click', function(e) {
+            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(err => {}); }
         });
 
-        document.body.addEventListener('click', (e) => {
-            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(()=>{}); }
+        btn.addEventListener('click', function firstClick(e) {
+            e.stopPropagation(); 
+            audio.play(); quack.play();
+            introText.style.opacity = "0";
+            btn.innerText = "I know, it's awful.";
+            btn.style.background = "#fa233b"; 
+            status.style.opacity = "0.9";
+            topPond.style.opacity = "1";
+            bottomPond.style.opacity = "1";
+            words.forEach((word, index) => {
+                setTimeout(() => { word.classList.add('fade-in'); }, 600 + (index * 600)); 
+            });
+            btn.removeEventListener('click', firstClick);
+            btn.addEventListener('click', function secondClick(e) {
+                e.stopPropagation(); encore.currentTime = 0; encore.play();
+                btn.innerText = "Quite terrible, tbf";
+            });
         });
     </script>
 </body>
