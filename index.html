@@ -5,29 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
-        /* ALL YOUR ORIGINAL STYLES REMAIN UNTOUCHED */
-        * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #4b0082; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; overflow: hidden; cursor: pointer; }
-        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; }
-        .headline { font-size: 2.2rem; font-weight: bold; line-height: 1.2; transition: opacity 0.5s ease; }
-        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; line-height: 1.1; z-index: 10; pointer-events: none; }
-        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; min-width: 280px; position: relative; z-index: 30; }
-        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; padding: 0 10px; }
-        .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 8px; filter: blur(8px); }
-        .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
-        .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; display: flex; opacity: 0; transition: opacity 1.5s ease; }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+
+        body { 
+            background: #4b0082; 
+            color: white; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            text-align: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* 3D Scene Layer */
+        #canvas-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .card {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 5;
+        }
+
+        .headline { 
+            font-size: 2.2rem; 
+            font-weight: bold; 
+            line-height: 1.2;
+            transition: opacity 0.5s ease;
+        }
+
+        #bdayContainer {
+            position: absolute;
+            top: 18%; 
+            width: 100%;
+            font-size: 4.0rem; 
+            font-weight: 900;
+            line-height: 1.1;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        button { 
+            padding: 18px 54px; 
+            font-size: 1.8rem; 
+            cursor: pointer; 
+            border-radius: 14px; 
+            border: none; 
+            background: #5ee788; 
+            color: white; 
+            font-weight: bold; 
+            transition: all 0.5s ease;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 280px;
+            position: relative;
+            z-index: 30; 
+        }
+
+        .status { 
+            font-size: 0.8rem; 
+            opacity: 0; 
+            transition: opacity 1s ease;
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        .word {
+            display: inline-block;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            margin: 0 8px;
+            filter: blur(8px);
+        }
+
+        .fade-in { 
+            opacity: 1 !important; 
+            filter: blur(0px) !important;
+        }
+
+        .duck-walker {
+            position: absolute;
+            width: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            display: flex;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
         #topPond { top: 0px; padding-top: 10px; }
         #bottomPond { bottom: 0px; padding-bottom: 10px; }
+
         .duck-line { display: flex; white-space: nowrap; }
         .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
         .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
-        .duck-image { height: 70px; width: auto; margin: 0 15px; opacity: 0.9; }
 
-        /* 3D Container */
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
+        .duck-image {
+            height: 70px; 
+            width: auto;
+            margin: 0 15px; 
+            opacity: 0.9;
+        }
 
-        @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        .tap-hint {
+            position: absolute;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+            z-index: 25;
+            animation: pulse 1.5s ease-in-out infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        @keyframes duckLoopRightToLeft {
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+
+        @keyframes duckLoopLeftToRight {
+            0% { transform: translateX(-50%); } 
+            100% { transform: translateX(0); } 
+        }
     </style>
 </head>
 <body>
@@ -36,6 +155,12 @@
 
     <div id="topPond" class="duck-walker">
         <div class="duck-line top-anim">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
@@ -60,56 +185,68 @@
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
             <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
+            <img src="duck.png" class="duck-image"><img src="duck-1.png" class="duck-image">
         </div>
     </div>
 
-    <audio id="myAudio" preload="auto"><source src="shitty_birthday_flute.mp3" type="audio/mpeg"></audio>
-    <audio id="duckAudio" preload="auto"><source src="duck_quack.mp3" type="audio/mpeg"></audio>
-    <audio id="encoreAudio" preload="auto"><source src="quacky_bday.mp3" type="audio/mpeg"></audio>
-    <audio id="bgQuackAudio" preload="auto"><source src="quack_me.mp3" type="audio/mpeg"></audio>
+    <audio id="myAudio" preload="auto">
+        <source src="shitty_birthday_flute.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="duckAudio" preload="auto">
+        <source src="duck_quack.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="encoreAudio" preload="auto">
+        <source src="quacky_bday.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="bgQuackAudio" preload="auto">
+        <source src="quack_me.mp3" type="audio/mpeg">
+    </audio>
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
         import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
 
-        const container = document.getElementById('canvas-container');
-        const bars = [];
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        container.appendChild(renderer.domElement);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Lighting - Neutral white light to show off Illustrator's baked textures
-        const light = new THREE.AmbientLight(0xffffff, 1.2);
+        scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 5, 5);
         scene.add(light);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-        dirLight.position.set(5, 5, 5);
-        scene.add(dirLight);
+        camera.position.z = 12;
 
-        camera.position.z = 15;
-
-        // Load the Illustrator Model
+        const bars = [];
         const loader = new GLTFLoader();
+
         loader.load('bar.glb', (gltf) => {
-            const originalModel = gltf.scene;
-            
-            for (let i = 0; i < 12; i++) {
-                const bar = originalModel.clone();
+            for (let i = 0; i < 7; i++) {
+                const bar = gltf.scene.clone();
+                // Finger-nail size scale
+                bar.scale.set(0.2, 0.2, 0.2); 
                 
-                // Random position
-                bar.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 5);
-                
-                // Random size variation
-                const s = 0.8 + Math.random() * 0.5;
-                bar.scale.set(s, s, s);
-                
-                // Random speeds for floating and spinning
-                bar.userData = { 
-                    rotX: Math.random() * 0.02, 
-                    rotY: Math.random() * 0.03,
-                    floatX: (Math.random() - 0.5) * 0.01,
-                    floatY: (Math.random() - 0.5) * 0.01
+                bar.position.set(
+                    (Math.random() - 0.5) * 15,
+                    (Math.random() - 0.5) * 10,
+                    (Math.random() - 0.5) * 5
+                );
+
+                bar.userData = {
+                    rotX: Math.random() * 0.02 + 0.01,
+                    rotY: Math.random() * 0.02 + 0.01,
+                    speedX: (Math.random() - 0.5) * 0.01,
+                    speedY: (Math.random() - 0.5) * 0.01
                 };
 
                 scene.add(bar);
@@ -119,11 +256,15 @@
 
         function animate() {
             requestAnimationFrame(animate);
-            bars.forEach(b => {
-                b.rotation.x += b.userData.rotX;
-                b.rotation.y += b.userData.rotY;
-                b.position.x += b.userData.floatX;
-                b.position.y += b.userData.floatY;
+            bars.forEach(bar => {
+                bar.rotation.x += bar.userData.rotX;
+                bar.rotation.y += bar.userData.rotY;
+                bar.position.x += bar.userData.speedX;
+                bar.position.y += bar.userData.speedY;
+
+                // Simple wrap-around to keep them on screen
+                if (Math.abs(bar.position.x) > 10) bar.userData.speedX *= -1;
+                if (Math.abs(bar.position.y) > 7) bar.userData.speedY *= -1;
             });
             renderer.render(scene, camera);
         }
@@ -134,37 +275,88 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        document.getElementById('playBtn').addEventListener('click', () => {
-            container.style.opacity = "1";
-        });
     </script>
 
     <script>
-        // YOUR ORIGINAL AUDIO AND UI LOGIC RESTORED
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
+        const status = document.getElementById('status');
+        const introText = document.getElementById('introText');
+        const topPond = document.getElementById('topPond');
+        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        btn.addEventListener('click', function firstClick() {
-            audio.play(); quack.play();
-            btn.innerText = "I know, it's awful.";
-            btn.style.background = "#fa233b"; 
-            document.getElementById('introText').style.opacity = "0";
-            document.getElementById('topPond').style.opacity = "1";
-            document.getElementById('bottomPond').style.opacity = "1";
-            document.getElementById('status').style.opacity = "1";
-            words.forEach((word, index) => {
-                setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
-            });
-            btn.removeEventListener('click', firstClick);
+        // Background click handler
+        document.body.addEventListener('click', function(e) {
+            if (e.target !== btn) {
+                bgQuack.currentTime = 0; 
+                bgQuack.play().catch(err => console.log("User must interact first"));
+            }
         });
 
-        document.body.addEventListener('click', (e) => {
-            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(()=>{}); }
+        function createHints() {
+            for(let i=0; i<8; i++) {
+                const hint = document.createElement('div');
+                hint.className = 'tap-hint';
+                hint.innerText = 'TAP';
+                hint.style.left = Math.random() * 80 + 10 + '%';
+                hint.style.top = Math.random() * 80 + 10 + '%';
+                hint.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(hint);
+            }
+        }
+
+        // Main button handler
+        btn.addEventListener('click', function firstClick(e) {
+            e.stopPropagation(); 
+            
+            const p1 = audio.play();
+            const p2 = quack.play();
+
+            Promise.all([p1, p2]).then(() => {
+                introText.style.opacity = "0";
+                btn.innerText = "I know, it's awful.";
+                btn.style.background = "#fa233b"; 
+                
+                status.style.opacity = "0.9";
+                topPond.style.opacity = "1";
+                bottomPond.style.opacity = "1";
+
+                words.forEach((word, index) => {
+                    setTimeout(() => {
+                        word.classList.add('fade-in');
+                    }, 600 + (index * 600)); 
+                });
+
+                btn.removeEventListener('click', firstClick);
+                
+                // Second phase button listener
+                btn.addEventListener('click', function secondClick(e) {
+                    e.stopPropagation();
+                    encore.currentTime = 0;
+                    encore.play();
+                    btn.innerText = "Quite terrible, tbf";
+                    
+                    // Create floating instructions
+                    createHints();
+
+                    btn.removeEventListener('click', secondClick);
+
+                    // Final phase button listener
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        btn.innerText = "What? That's it.";
+                        btn.style.opacity = "0.7";
+                    });
+                });
+
+            }).catch((error) => {
+                status.innerText = "Tap again to play!";
+                status.style.opacity = "1";
+            });
         });
     </script>
 </body>
