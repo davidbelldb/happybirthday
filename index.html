@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
-        /* ALL YOUR ORIGINAL STYLES RESTORED */
         * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #4b0082; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; overflow: hidden; cursor: pointer; }
-        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; }
+        
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
+
+        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 5; }
         .headline { font-size: 2.2rem; font-weight: bold; line-height: 1.2; transition: opacity 0.5s ease; }
-        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; line-height: 1.1; z-index: 10; pointer-events: none; }
-        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; min-width: 280px; position: relative; z-index: 30; }
-        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; padding: 0 10px; }
+        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; z-index: 10; pointer-events: none; }
+        
+        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; z-index: 30; }
+        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; }
+        
         .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 8px; filter: blur(8px); }
         .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
+
         .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; display: flex; opacity: 0; transition: opacity 1.5s ease; }
         #topPond { top: 0px; padding-top: 10px; }
         #bottomPond { bottom: 0px; padding-bottom: 10px; }
@@ -22,11 +27,9 @@
         .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
         .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
         .duck-image { height: 70px; width: auto; margin: 0 15px; opacity: 0.9; }
+
         @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
-
-        /* 3D Container - Invisible until click */
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
     </style>
 </head>
 <body>
@@ -78,33 +81,48 @@
         container.appendChild(renderer.domElement);
 
         const loader = new THREE.TextureLoader();
-        // Matching the orange from your wrapper for the thin sides
-        const orangeSide = new THREE.MeshStandardMaterial({ color: 0xffa500, metalness: 0.3, roughness: 0.2 });
-        const materials = [
-            orangeSide, orangeSide, orangeSide, orangeSide,
-            new THREE.MeshStandardMaterial({ map: loader.load('front.png'), metalness: 0.2, roughness: 0.2 }),
-            new THREE.MeshStandardMaterial({ map: loader.load('back.png'), metalness: 0.2, roughness: 0.2 })
-        ];
+        
+        // Load textures
+        const texFront = loader.load('front.png');
+        const texBack = loader.load('back.png');
 
-        // Thin chocolate bar geometry
-        const geometry = new THREE.BoxGeometry(2.5, 0.9, 0.15);
+        // Material setup: Front, Back, and Orange for the "tapered" edges
+        const matFront = new THREE.MeshPhongMaterial({ map: texFront, shininess: 80 });
+        const matBack = new THREE.MeshPhongMaterial({ map: texBack, shininess: 80 });
+        const orangeEdge = new THREE.MeshPhongMaterial({ color: 0xffa500, shininess: 50 });
 
-        for (let i = 0; i < 12; i++) {
-            const bar = new THREE.Mesh(geometry, materials);
+        // Tapered Geometry (Cylinder with 4 sides creates the pillow/wrapper shape)
+        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 3, 4, 1, false);
+        geometry.rotateX(Math.PI / 2);
+        geometry.rotateY(Math.PI / 4);
+        // Squash it slightly to look like a bar
+        geometry.scale(1.8, 0.7, 1);
+
+        const materials = [orangeEdge, matFront, matBack, orangeEdge];
+
+        for (let i = 0; i < 15; i++) {
+            // Apply materials. Three.js Cylinder uses materials differently, 
+            // so we create a mesh and map faces manually or use a Group.
+            // Simplified here:
+            const bar = new THREE.Mesh(geometry, [orangeEdge, matFront, matBack]);
+            
             bar.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
             bar.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
+            
             bar.userData = { 
-                rotX: (Math.random() - 0.5) * 0.02, 
-                rotY: (Math.random() - 0.5) * 0.05 
+                rotX: (Math.random() - 0.5) * 0.03, 
+                rotY: (Math.random() - 0.5) * 0.06 
             };
+            
             scene.add(bar);
             bars.push(bar);
         }
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 5, 5);
-        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 5, 5);
+        scene.add(dirLight);
+
         camera.position.z = 10;
 
         function animate() {
@@ -116,47 +134,48 @@
             renderer.render(scene, camera);
         }
         animate();
-        
-        // Show bars when original button is clicked
+
         document.getElementById('playBtn').addEventListener('click', () => {
             container.style.opacity = "1";
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 
     <script>
-        /* ALL YOUR ORIGINAL LOGIC RESTORED */
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
-        const status = document.getElementById('status');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        document.body.addEventListener('click', function(e) {
-            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(err => {}); }
-        });
-
-        btn.addEventListener('click', function firstClick(e) {
-            e.stopPropagation(); 
+        btn.addEventListener('click', function firstClick() {
             audio.play(); quack.play();
             introText.style.opacity = "0";
-            btn.innerText = "I know, it's awful.";
+            btn.innerText = "It's truly awful.";
             btn.style.background = "#fa233b"; 
-            status.style.opacity = "0.9";
+            document.getElementById('status').style.opacity = "0.9";
             topPond.style.opacity = "1";
             bottomPond.style.opacity = "1";
             words.forEach((word, index) => {
-                setTimeout(() => { word.classList.add('fade-in'); }, 600 + (index * 600)); 
+                setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
             });
             btn.removeEventListener('click', firstClick);
-            btn.addEventListener('click', function secondClick(e) {
-                e.stopPropagation(); encore.currentTime = 0; encore.play();
-                btn.innerText = "Quite terrible, tbf";
+            btn.addEventListener('click', () => {
+                encore.currentTime = 0; encore.play();
             });
+        });
+
+        document.body.addEventListener('click', (e) => {
+            if (e.target !== btn) { bgQuack.currentTime = 0; bgQuack.play().catch(()=>{}); }
         });
     </script>
 </body>
