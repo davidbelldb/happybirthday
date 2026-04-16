@@ -61,7 +61,6 @@
             pointer-events: none;
         }
 
-        /* Base button style */
         button { 
             padding: 18px 54px; 
             font-size: 1.8rem; 
@@ -78,11 +77,11 @@
             z-index: 30; 
         }
 
-        /* The final classy button style */
-        #finalBtn {
-            display: none; /* Hidden by default */
+        /* Shared style for final sequence buttons */
+        #finalBtn, #stopBtn {
+            display: none;
             background: #ffa500; /* Orange */
-            color: #4b0082;   /* Purple */
+            color: #4b0082;      /* Purple */
         }
 
         .status { 
@@ -187,6 +186,7 @@
         <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't too bad, but your bday was still missing...</div>
         <button id="playBtn"> This. </button>
         <button id="finalBtn">Until next year!</button>
+        <button id="stopBtn">Seriously. Stop.</button>
         <div id="status" class="status">*Better late than never, right? But look. You deserve it. Along with a box of biscuits and a bag of coffee.</div>
     </div>
 
@@ -276,6 +276,7 @@
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
         const finalBtn = document.getElementById('finalBtn');
+        const stopBtn = document.getElementById('stopBtn');
         const status = document.getElementById('status');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
@@ -283,7 +284,7 @@
         const words = document.querySelectorAll('.word');
 
         document.body.addEventListener('click', function(e) {
-            if (e.target !== btn && e.target !== finalBtn) {
+            if (e.target.tagName !== 'BUTTON') {
                 bgQuack.currentTime = 0; 
                 bgQuack.play().catch(err => {});
             }
@@ -335,16 +336,22 @@
                         btn.innerText = "What? That's it.";
                         btn.style.opacity = "0.7";
                         
-                        // NEW LOGIC: When "What? That's it." is clicked, swap to the final button
                         btn.removeEventListener('click', thirdClick);
                         btn.addEventListener('click', function finalSwap(e) {
                             e.stopPropagation();
-                            btn.style.display = "none";      // Hide red button
-                            finalBtn.style.display = "block"; // Show orange/purple button
+                            btn.style.display = "none";
+                            finalBtn.style.display = "block";
                         });
                     });
                 });
             });
+        });
+
+        // Last logic: From 'Until next year' to 'Seriously. Stop.'
+        finalBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            finalBtn.style.display = "none";
+            stopBtn.style.display = "block";
         });
     </script>
 </body>
