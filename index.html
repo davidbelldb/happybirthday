@@ -61,6 +61,7 @@
             pointer-events: none;
         }
 
+        /* Base button style */
         button { 
             padding: 18px 54px; 
             font-size: 1.8rem; 
@@ -75,6 +76,13 @@
             min-width: 280px;
             position: relative;
             z-index: 30; 
+        }
+
+        /* The final classy button style */
+        #finalBtn {
+            display: none; /* Hidden by default */
+            background: #ffa500; /* Orange */
+            color: #4b0082;   /* Purple */
         }
 
         .status { 
@@ -178,6 +186,7 @@
     <div id="mainCard" class="card">
         <div id="introText" class="headline">Let's be honest, 160 bags of Yorkshire Gold isn't too bad, but your bday was still missing...</div>
         <button id="playBtn"> This. </button>
+        <button id="finalBtn">Until next year!</button>
         <div id="status" class="status">*Better late than never, right? But look. You deserve it. Along with a box of biscuits and a bag of coffee.</div>
     </div>
 
@@ -220,29 +229,19 @@
         const bars = [];
         const loader = new GLTFLoader();
 
-        // Export this function to the global window so the other script can call it
         window.spawnBars = function() {
             document.getElementById('canvas-container').style.opacity = "1";
             loader.load('bar.glb', (gltf) => {
-                // Total of 27 bars (7 original + 20 more)
                 for (let i = 0; i < 27; i++) {
                     const bar = gltf.scene.clone();
-                    // Scaled up by 200% (original 0.2 is now 0.6 for "nail" size context)
                     bar.scale.set(0.6, 0.6, 0.6); 
-                    
-                    bar.position.set(
-                        (Math.random() - 0.5) * 15,
-                        (Math.random() - 0.5) * 10,
-                        (Math.random() - 0.5) * 5
-                    );
-
+                    bar.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
                     bar.userData = {
                         rotX: Math.random() * 0.04 + 0.02,
                         rotY: Math.random() * 0.04 + 0.02,
                         speedX: (Math.random() - 0.5) * 0.02,
                         speedY: (Math.random() - 0.5) * 0.02
                     };
-
                     scene.add(bar);
                     bars.push(bar);
                 }
@@ -256,7 +255,6 @@
                 bar.rotation.y += bar.userData.rotY;
                 bar.position.x += bar.userData.speedX;
                 bar.position.y += bar.userData.speedY;
-
                 if (Math.abs(bar.position.x) > 12) bar.userData.speedX *= -1;
                 if (Math.abs(bar.position.y) > 8) bar.userData.speedY *= -1;
             });
@@ -277,6 +275,7 @@
         const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
+        const finalBtn = document.getElementById('finalBtn');
         const status = document.getElementById('status');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
@@ -284,7 +283,7 @@
         const words = document.querySelectorAll('.word');
 
         document.body.addEventListener('click', function(e) {
-            if (e.target !== btn) {
+            if (e.target !== btn && e.target !== finalBtn) {
                 bgQuack.currentTime = 0; 
                 bgQuack.play().catch(err => {});
             }
@@ -319,7 +318,6 @@
                     setTimeout(() => { word.classList.add('fade-in'); }, 600 + (index * 600)); 
                 });
 
-                // TRIGGER BARS HERE - When the button says "I know, it's awful."
                 if(window.spawnBars) window.spawnBars();
 
                 btn.removeEventListener('click', firstClick);
@@ -331,10 +329,19 @@
                     btn.innerText = "Quite terrible, tbf";
                     createHints();
                     btn.removeEventListener('click', secondClick);
-                    btn.addEventListener('click', function(e) {
+
+                    btn.addEventListener('click', function thirdClick(e) {
                         e.stopPropagation();
                         btn.innerText = "What? That's it.";
                         btn.style.opacity = "0.7";
+                        
+                        // NEW LOGIC: When "What? That's it." is clicked, swap to the final button
+                        btn.removeEventListener('click', thirdClick);
+                        btn.addEventListener('click', function finalSwap(e) {
+                            e.stopPropagation();
+                            btn.style.display = "none";      // Hide red button
+                            finalBtn.style.display = "block"; // Show orange/purple button
+                        });
                     });
                 });
             });
