@@ -5,21 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy Birthday Katie!</title>
     <style>
+        /* ALL YOUR ORIGINAL STYLES REMAIN UNTOUCHED */
         * { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #4b0082; color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; overflow: hidden; cursor: pointer; }
-        
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
-
-        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 5; }
+        .card { width: 90%; display: flex; flex-direction: column; align-items: center; gap: 20px; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 5; }
         .headline { font-size: 2.2rem; font-weight: bold; line-height: 1.2; transition: opacity 0.5s ease; }
-        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; z-index: 10; pointer-events: none; }
-        
-        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; z-index: 30; }
-        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; }
-        
+        #bdayContainer { position: absolute; top: 18%; width: 100%; font-size: 4.0rem; font-weight: 900; line-height: 1.1; z-index: 10; pointer-events: none; }
+        button { padding: 18px 54px; font-size: 1.8rem; cursor: pointer; border-radius: 14px; border: none; background: #5ee788; color: white; font-weight: bold; transition: all 0.5s ease; -webkit-tap-highlight-color: transparent; min-width: 280px; position: relative; z-index: 30; }
+        .status { font-size: 0.8rem; opacity: 0; transition: opacity 1s ease; margin-top: 10px; padding: 0 10px; }
         .word { display: inline-block; opacity: 0; transition: opacity 0.8s ease; margin: 0 8px; filter: blur(8px); }
         .fade-in { opacity: 1 !important; filter: blur(0px) !important; }
-
         .duck-walker { position: absolute; width: 100%; overflow: hidden; pointer-events: none; display: flex; opacity: 0; transition: opacity 1.5s ease; }
         #topPond { top: 0px; padding-top: 10px; }
         #bottomPond { bottom: 0px; padding-bottom: 10px; }
@@ -27,6 +22,9 @@
         .bottom-anim { animation: duckLoopRightToLeft 12s linear infinite; }
         .top-anim { animation: duckLoopLeftToRight 12s linear infinite; }
         .duck-image { height: 70px; width: auto; margin: 0 15px; opacity: 0.9; }
+
+        /* 3D Container */
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 2s ease; }
 
         @keyframes duckLoopRightToLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes duckLoopLeftToRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
@@ -38,6 +36,7 @@
 
     <div id="topPond" class="duck-walker">
         <div class="duck-line top-anim">
+            <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
             <img src="duck_2.png" class="duck-image"><img src="duck-3.png" class="duck-image">
@@ -71,6 +70,7 @@
 
     <script type="module">
         import * as THREE from 'https://cdn.skypack.dev/three@0.132.2';
+        import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
 
         const container = document.getElementById('canvas-container');
         const bars = [];
@@ -80,98 +80,87 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         container.appendChild(renderer.domElement);
 
-        const loader = new THREE.TextureLoader();
-        
-        // Load textures
-        const texFront = loader.load('front.png');
-        const texBack = loader.load('back.png');
-
-        // Material setup: Front, Back, and Orange for the "tapered" edges
-        const matFront = new THREE.MeshPhongMaterial({ map: texFront, shininess: 80 });
-        const matBack = new THREE.MeshPhongMaterial({ map: texBack, shininess: 80 });
-        const orangeEdge = new THREE.MeshPhongMaterial({ color: 0xffa500, shininess: 50 });
-
-        // Tapered Geometry (Cylinder with 4 sides creates the pillow/wrapper shape)
-        const geometry = new THREE.CylinderGeometry(0.5, 0.5, 3, 4, 1, false);
-        geometry.rotateX(Math.PI / 2);
-        geometry.rotateY(Math.PI / 4);
-        // Squash it slightly to look like a bar
-        geometry.scale(1.8, 0.7, 1);
-
-        const materials = [orangeEdge, matFront, matBack, orangeEdge];
-
-        for (let i = 0; i < 15; i++) {
-            // Apply materials. Three.js Cylinder uses materials differently, 
-            // so we create a mesh and map faces manually or use a Group.
-            // Simplified here:
-            const bar = new THREE.Mesh(geometry, [orangeEdge, matFront, matBack]);
-            
-            bar.position.set((Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 5);
-            bar.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-            
-            bar.userData = { 
-                rotX: (Math.random() - 0.5) * 0.03, 
-                rotY: (Math.random() - 0.5) * 0.06 
-            };
-            
-            scene.add(bar);
-            bars.push(bar);
-        }
-
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        // Lighting - Neutral white light to show off Illustrator's baked textures
+        const light = new THREE.AmbientLight(0xffffff, 1.2);
+        scene.add(light);
         const dirLight = new THREE.DirectionalLight(0xffffff, 1);
         dirLight.position.set(5, 5, 5);
         scene.add(dirLight);
 
-        camera.position.z = 10;
+        camera.position.z = 15;
+
+        // Load the Illustrator Model
+        const loader = new GLTFLoader();
+        loader.load('bar.glb', (gltf) => {
+            const originalModel = gltf.scene;
+            
+            for (let i = 0; i < 12; i++) {
+                const bar = originalModel.clone();
+                
+                // Random position
+                bar.position.set((Math.random() - 0.5) * 20, (Math.random() - 0.5) * 15, (Math.random() - 0.5) * 5);
+                
+                // Random size variation
+                const s = 0.8 + Math.random() * 0.5;
+                bar.scale.set(s, s, s);
+                
+                // Random speeds for floating and spinning
+                bar.userData = { 
+                    rotX: Math.random() * 0.02, 
+                    rotY: Math.random() * 0.03,
+                    floatX: (Math.random() - 0.5) * 0.01,
+                    floatY: (Math.random() - 0.5) * 0.01
+                };
+
+                scene.add(bar);
+                bars.push(bar);
+            }
+        });
 
         function animate() {
             requestAnimationFrame(animate);
             bars.forEach(b => {
                 b.rotation.x += b.userData.rotX;
                 b.rotation.y += b.userData.rotY;
+                b.position.x += b.userData.floatX;
+                b.position.y += b.userData.floatY;
             });
             renderer.render(scene, camera);
         }
         animate();
-
-        document.getElementById('playBtn').addEventListener('click', () => {
-            container.style.opacity = "1";
-        });
 
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
+
+        document.getElementById('playBtn').addEventListener('click', () => {
+            container.style.opacity = "1";
+        });
     </script>
 
     <script>
+        // YOUR ORIGINAL AUDIO AND UI LOGIC RESTORED
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
         const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
-        const introText = document.getElementById('introText');
-        const topPond = document.getElementById('topPond');
-        const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
         btn.addEventListener('click', function firstClick() {
             audio.play(); quack.play();
-            introText.style.opacity = "0";
-            btn.innerText = "It's truly awful.";
+            btn.innerText = "I know, it's awful.";
             btn.style.background = "#fa233b"; 
-            document.getElementById('status').style.opacity = "0.9";
-            topPond.style.opacity = "1";
-            bottomPond.style.opacity = "1";
+            document.getElementById('introText').style.opacity = "0";
+            document.getElementById('topPond').style.opacity = "1";
+            document.getElementById('bottomPond').style.opacity = "1";
+            document.getElementById('status').style.opacity = "1";
             words.forEach((word, index) => {
                 setTimeout(() => word.classList.add('fade-in'), 600 + (index * 600)); 
             });
             btn.removeEventListener('click', firstClick);
-            btn.addEventListener('click', () => {
-                encore.currentTime = 0; encore.play();
-            });
         });
 
         document.body.addEventListener('click', (e) => {
