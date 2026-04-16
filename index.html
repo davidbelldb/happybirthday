@@ -20,6 +20,7 @@
             height: 100vh; 
             text-align: center;
             overflow: hidden;
+            cursor: pointer; /* Suggests the background is interactive */
         }
 
         .card {
@@ -28,7 +29,6 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            /* Transition kept for button color change, but movement is gone */
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 5;
         }
@@ -63,6 +63,8 @@
             transition: all 0.5s ease;
             -webkit-tap-highlight-color: transparent;
             min-width: 280px;
+            position: relative;
+            z-index: 20; /* Ensures button is "above" the body click */
         }
 
         .status { 
@@ -177,26 +179,40 @@
         <source src="quacky_bday.mp3" type="audio/mpeg">
     </audio>
 
+    <audio id="bgQuackAudio" preload="auto">
+        <source src="quack_me.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         const audio = document.getElementById('myAudio');
         const quack = document.getElementById('duckAudio');
         const encore = document.getElementById('encoreAudio');
+        const bgQuack = document.getElementById('bgQuackAudio');
         const btn = document.getElementById('playBtn');
         const status = document.getElementById('status');
-        const card = document.getElementById('mainCard');
         const introText = document.getElementById('introText');
         const topPond = document.getElementById('topPond');
         const bottomPond = document.getElementById('bottomPond');
         const words = document.querySelectorAll('.word');
 
-        // First click handler
-        btn.addEventListener('click', function firstClick() {
+        // Background click handler
+        document.body.addEventListener('click', function(e) {
+            // Only play if they didn't click the button itself
+            if (e.target !== btn) {
+                bgQuack.currentTime = 0; // Rewind so they can spam it
+                bgQuack.play().catch(err => console.log("User must interact with page first"));
+            }
+        });
+
+        // Main button handler
+        btn.addEventListener('click', function firstClick(e) {
+            e.stopPropagation(); // Prevents the background quack from firing at the same time
+            
             const p1 = audio.play();
             const p2 = quack.play();
 
             Promise.all([p1, p2]).then(() => {
                 introText.style.opacity = "0";
-                
                 btn.innerText = "I know, it's awful.";
                 btn.style.background = "#fa233b"; 
                 
@@ -210,16 +226,16 @@
                     }, 600 + (index * 600)); 
                 });
 
-                // Remove the first listener and add the Encore listener
                 btn.removeEventListener('click', firstClick);
                 
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    encore.currentTime = 0;
                     encore.play();
                     btn.innerText = "Quite terrible";
                 });
 
             }).catch((error) => {
-                console.log("Audio failed:", error);
                 status.innerText = "Tap again to play!";
                 status.style.opacity = "1";
             });
