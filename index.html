@@ -20,7 +20,7 @@
             height: 100vh; 
             text-align: center;
             overflow: hidden;
-            cursor: pointer; /* Suggests the background is interactive */
+            cursor: pointer;
         }
 
         .card {
@@ -64,7 +64,7 @@
             -webkit-tap-highlight-color: transparent;
             min-width: 280px;
             position: relative;
-            z-index: 20; /* Ensures button is "above" the body click */
+            z-index: 30; 
         }
 
         .status { 
@@ -110,6 +110,24 @@
             width: auto;
             margin: 0 15px; 
             opacity: 0.9;
+        }
+
+        /* The floating "TAP" labels */
+        .tap-hint {
+            position: absolute;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+            z-index: 25;
+            animation: pulse 1.5s ease-in-out infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 0.3; }
         }
 
         @keyframes duckLoopRightToLeft {
@@ -197,16 +215,27 @@
 
         // Background click handler
         document.body.addEventListener('click', function(e) {
-            // Only play if they didn't click the button itself
             if (e.target !== btn) {
-                bgQuack.currentTime = 0; // Rewind so they can spam it
-                bgQuack.play().catch(err => console.log("User must interact with page first"));
+                bgQuack.currentTime = 0; 
+                bgQuack.play().catch(err => console.log("User must interact first"));
             }
         });
 
+        function createHints() {
+            for(let i=0; i<8; i++) {
+                const hint = document.createElement('div');
+                hint.className = 'tap-hint';
+                hint.innerText = 'TAP';
+                hint.style.left = Math.random() * 80 + 10 + '%';
+                hint.style.top = Math.random() * 80 + 10 + '%';
+                hint.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(hint);
+            }
+        }
+
         // Main button handler
         btn.addEventListener('click', function firstClick(e) {
-            e.stopPropagation(); // Prevents the background quack from firing at the same time
+            e.stopPropagation(); 
             
             const p1 = audio.play();
             const p2 = quack.play();
@@ -228,11 +257,24 @@
 
                 btn.removeEventListener('click', firstClick);
                 
-                btn.addEventListener('click', function(e) {
+                // Second phase button listener
+                btn.addEventListener('click', function secondClick(e) {
                     e.stopPropagation();
                     encore.currentTime = 0;
                     encore.play();
-                    btn.innerText = "Quite terrible.";
+                    btn.innerText = "Quite terrible, in fact.";
+                    
+                    // Create floating instructions
+                    createHints();
+
+                    btn.removeEventListener('click', secondClick);
+
+                    // Final phase button listener
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        btn.innerText = "That's it. That's all I've got.";
+                        btn.style.opacity = "0.7";
+                    });
                 });
 
             }).catch((error) => {
