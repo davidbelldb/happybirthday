@@ -336,7 +336,7 @@
                     btn.addEventListener('click', function thirdClick(e) {
                         e.stopPropagation();
                         btn.innerText = "What? That's it.";
-                        btn.style.opacity = "0.7";
+                       // btn.style.opacity = "0.7";
                         
                         btn.removeEventListener('click', thirdClick);
                         btn.addEventListener('click', function finalSwap(e) {
